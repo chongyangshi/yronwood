@@ -22,4 +22,4 @@ I build Go services at [Monzo](https://monzo.com), so this project has extensive
 * [`slog`](https://github.com/monzo/slog) for logging
 * [`terrors`](https://github.com/monzo/terrors) for internal error schematics
 
-Separating building and runtime containers for Go applications is a bit of a pain for simple setups. My Dockerfile is borrowed from [C Hemidy](https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324)
+Separation of build and runtime containers for Go applications can be a bit of a pain for simple setups. My Dockerfile is borrowed from [this written by C Hemidy](https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324).
