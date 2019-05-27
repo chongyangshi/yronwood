@@ -35,7 +35,10 @@ func viewImage(req typhon.Request) typhon.Response {
 	}
 
 	if accessType == config.ConfigAccessTypePrivate && !authenticated {
-		return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+		if req.FormValue("secret") == "" {
+			return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+		}
+		return typhon.Response{Error: terrors.Unauthorized("", "Authentication failure", nil)}
 	}
 
 	if !validateFilename(fileName) {
