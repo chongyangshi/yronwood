@@ -1,4 +1,6 @@
-ARG ALPINE_VERSION=3.9
-FROM alpine:$ALPINE_VERSION
-COPY ./yronwood /
-CMD ["/yronwood"]
+FROM golang:latest 
+RUN mkdir /golang 
+ADD . /golang/ 
+WORKDIR /golang 
+RUN go build -o yronwood . 
+CMD ["/golang/yronwood"]
