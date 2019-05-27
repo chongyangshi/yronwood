@@ -12,6 +12,7 @@ import (
 func Service() typhon.Service {
 	router := typhon.Router{}
 	router.GET("/", handleIndex)
+	router.GET("/index.html", handleIndex)
 	router.PUT("/upload", uploadImage)
 	router.GET("/uploads/:accesstype/:filename", viewImage)
 	router.POST("/list", listImages)
