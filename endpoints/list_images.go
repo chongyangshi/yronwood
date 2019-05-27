@@ -52,7 +52,6 @@ func listImages(req typhon.Request) typhon.Response {
 	for _, f := range files {
 		images = append(images, types.ImageMetadata{
 			FileName: f.Name(),
-			FileSize: int(f.Size()),
 		})
 	}
 

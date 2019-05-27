@@ -22,7 +22,7 @@ func viewImage(req typhon.Request) typhon.Response {
 	}
 
 	// For legacy compatible reasons, we process image url in a pseudo-static manner (hostname/accesstype/filename.jpg)
-	success, accessType, fileName := processURI(req.RequestURI)
+	success, accessType, fileName := processURI(req.URL.Path)
 	if !success {
 		return typhon.Response{Error: terrors.NotFound("not_found", "Requested image is not found", nil)}
 	}

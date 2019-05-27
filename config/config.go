@@ -18,7 +18,7 @@ var (
 	ConfigStorageDirectoryPrivate   = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PRIVATE", "/images/private", true)
 	ConfigAccessTypePublic          = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_PUBLIC", "public", true)
 	ConfigAccessTypeUnlisted        = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_UNLISTED", "big", true)
-	ConfigAccessTypePrivate         = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_UNLISTED", "private", true)
+	ConfigAccessTypePrivate         = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_PRIVATE", "private", true)
 	ConfigMaxFileSize               = getConfigFromOSEnv("YRONWOOD_MAX_FILE_SIZE", "25165824", true) // 24MB
 	ConfigPermittedExtensions       = getConfigFromOSEnv("YRONWOOD_PERMITTED_EXTENSIONS", "jpeg|jpg|png|gif", true)
 	ConfigAuthenticationMethod      = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_METHOD", authenticationMethodBasic, true)

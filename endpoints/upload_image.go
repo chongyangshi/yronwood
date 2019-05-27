@@ -51,11 +51,7 @@ func uploadImage(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
 	}
 
-	if len(body.Payload) != body.Metadata.FileSize || body.Metadata.FileSize <= 0 {
-		return typhon.Response{Error: terrors.BadRequest("bad_file_size", "Invalid content length for payload", nil)}
-	}
-
-	if body.Metadata.FileSize > int(maxUploadSize) {
+	if len(body.Payload) == 0 || len(body.Payload) > int(maxUploadSize) {
 		return typhon.Response{Error: terrors.BadRequest("bad_file_size", "Content length of payload is too large", nil)}
 	}
 
@@ -82,6 +78,7 @@ func uploadImage(req typhon.Request) typhon.Response {
 
 	decodedPayload, err := base64.StdEncoding.DecodeString(body.Payload)
 	if err != nil {
+		slog.Error(req, "Error decoding base64 payload: %v", err)
 		return typhon.Response{Error: terrors.BadRequest("bad_payload", "Invalid payload, could not decode", nil)}
 	}
 

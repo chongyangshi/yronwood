@@ -91,9 +91,9 @@ func validateAccessType(accessType string) (bool, string) {
 	case config.ConfigAccessTypePublic:
 		return true, config.ConfigStorageDirectoryPublic
 	case config.ConfigAccessTypeUnlisted:
-		return false, config.ConfigStorageDirectoryUnlisted
+		return true, config.ConfigStorageDirectoryUnlisted
 	case config.ConfigAccessTypePrivate:
-		return false, config.ConfigStorageDirectoryPrivate
+		return true, config.ConfigStorageDirectoryPrivate
 	}
 
 	return false, ""

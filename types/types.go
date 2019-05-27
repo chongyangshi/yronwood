@@ -6,7 +6,6 @@ type BasicAuth struct {
 
 type ImageMetadata struct {
 	FileName string `json:"file_name"`
-	FileSize int    `json:"file_size"` // After encoding
 }
 
 type ImageUploadRequest struct {
