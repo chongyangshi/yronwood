@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"strconv"
 
@@ -65,6 +66,18 @@ func uploadImage(req typhon.Request) typhon.Response {
 	validAccessType, storagePath := validateAccessType(body.AccessType)
 	if !validAccessType {
 		return typhon.Response{Error: terrors.BadRequest("bad_access_type", "Invalid file access type specified", nil)}
+	}
+
+	if _, err := os.Stat(storagePath); os.IsNotExist(err) {
+		slog.Info(req, "Storage directory %s does not exist, attempting to create it", storagePath)
+		mkdirErr := os.Mkdir(storagePath, 0755)
+		if mkdirErr != nil {
+			slog.Error(req, "Could not create non-existing storage directory %s: %v", storagePath, err)
+			return typhon.Response{Error: terrors.InternalService("", "Error encountered retrieving file", nil)}
+		}
+	} else if err != nil {
+		slog.Error(req, "Could not check if storage directory exists: %v", err)
+		return typhon.Response{Error: terrors.InternalService("", "Error encountered retrieving file", nil)}
 	}
 
 	decodedPayload, err := base64.StdEncoding.DecodeString(body.Payload)
