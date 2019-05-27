@@ -8,7 +8,7 @@ It serves as a drop-in replacement for my old [Lychee](https://github.com/Lychee
 
 ## Usage
 
-See [`Dockerfile`](https://github.com/icydoge/yronwood/tree/master/Dockerfile) for how it is built and ran.
+See [`Dockerfile`](https://github.com/icydoge/yronwood/tree/master/Dockerfile) for how it is built and ran; and [`k8s.yaml`]((https://github.com/icydoge/yronwood/tree/master/k8s.yaml)) for how I have configured it in my cluster.
 
 See [`config/config.go`](https://github.com/icydoge/yronwood/tree/master/config/config.go) for how it is configured via environmental variables. In a Kubernetes cluster, an ingress (NGINX in my case) terminates TLS and runs in front of its pod.
 
