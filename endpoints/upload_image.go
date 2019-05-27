@@ -48,7 +48,10 @@ func uploadImage(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
 	}
 	if !authenticated {
-		return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+		if body.Auth.Secret == "" {
+			return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+		}
+		return typhon.Response{Error: terrors.Unauthorized("", "Authentication failure", nil)}
 	}
 
 	if len(body.Payload) == 0 || len(body.Payload) > int(maxUploadSize) {

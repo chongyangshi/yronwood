@@ -38,6 +38,9 @@ func listImages(req typhon.Request) typhon.Response {
 			return typhon.Response{Error: terrors.InternalService("", "Error encountered authenticating you", nil)}
 		}
 		if !authSuccess {
+			if body.Auth.Secret == "" {
+				return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+			}
 			return typhon.Response{Error: terrors.Unauthorized("bad_access", "Unauthorized access for this access type", nil)}
 		}
 	}
