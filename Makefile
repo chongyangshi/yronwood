@@ -9,7 +9,7 @@ REPOSITORY := 172.16.32.2:2443/go
 all: pull build push
 
 build:
-    go build -ldflags "-s -w" github.com/icydoge/yronwood
+	go build -ldflags "-s -w" github.com/icydoge/yronwood
 	docker build -t ${SVC} --build-arg ALPINE_VERSION=${ALPINE_VERSION} .
 
 pull:
