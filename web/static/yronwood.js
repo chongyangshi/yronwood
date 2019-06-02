@@ -39,10 +39,13 @@ function list_images(access_type) {
                 }
             }
         },
-        error: function(xhr){
-            var result = JSON.parse(xhr.responseText);
-            $("#yronwood-error").text("Error: " + result.message + " (" + result.code + ")");
-            return result
+        error: function(result){
+            if (result.responseText == undefined || result.responseText == "") {
+                $("#yronwood-error").text("Error: unknown (" + result.statusText +")");
+            } else {
+                var err = $.parseJSON(xhr.responseText)
+                $("#yronwood-error").text("Error: " + err.message + " (" + err.code + ")");
+            }
         }
     });
 }
