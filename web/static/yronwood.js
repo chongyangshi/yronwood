@@ -2,6 +2,15 @@ const API_BASE = "http://127.0.0.1:18080"
 const ACCESS_TYPE_PUBLIC = "public"
 const ACCESS_TYPE_PRIVATE = "private"
 
+var state_authenticated = false
+
+function set_authenticated() {
+    $("#authenticateIcon").removeClass("oi-lock-locked");
+    $("#authenticateIcon").addClass("oi-lock-unlocked");
+    $("#uploadIcon").removeAttr("hidden");
+    console.log("Secret set")
+}
+
 function set_basic_auth_secret(secret) {
     sessionStorage.setItem("yronwood_basic_auth_secret", secret);
 }
@@ -33,7 +42,11 @@ function list_images(access_type) {
                         $("#images-container").append(current_row);
                         row_size = 0;
                     }
-                    var image_link = API_BASE + "/uploads/" + access_type + "/" + image.file_name 
+                    var image_link = API_BASE + "/uploads/" + encodeURIComponent(access_type) + "/" + encodeURIComponent(image.file_name)
+                    var secret = get_basic_auth_secret();
+                    if (secret != null && secret != "") {
+                        image_link += "?secret=" + encodeURIComponent(secret)
+                    }
                     $(current_row).append("<div class='col-sm grid-image'><a target='_blank' href='"+ image_link + "'><img class='grid-image' src='" + image_link +"' /></a></div>");
                     row_size++;
                 }
