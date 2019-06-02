@@ -1,7 +1,11 @@
 package types
 
-type BasicAuth struct {
+type AuthenticateRequest struct {
 	Secret string `json:"secret"`
+}
+
+type AuthenticateResponse struct {
+	Token string `json:"token"`
 }
 
 type ImageMetadata struct {
@@ -9,7 +13,7 @@ type ImageMetadata struct {
 }
 
 type ImageUploadRequest struct {
-	Auth       BasicAuth     `json:"auth"`
+	Token      string        `json:"token"`
 	Metadata   ImageMetadata `json:"metadata"`
 	Payload    string        `json:"payload"`
 	Checksum   string        `json:"checksum"` // SHA256 before encoding
@@ -18,8 +22,8 @@ type ImageUploadRequest struct {
 
 // Auth optional for public images only.
 type ImageListRequest struct {
-	Auth       BasicAuth `json:"auth,omitempty"`
-	AccessType string    `json:"access_type"`
+	Token      string `json:"token"`
+	AccessType string `json:"access_type"`
 }
 
 type ImageListResponse struct {

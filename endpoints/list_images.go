@@ -8,6 +8,7 @@ import (
 	"github.com/monzo/terrors"
 	"github.com/monzo/typhon"
 
+	"github.com/icydoge/yronwood/auth"
 	"github.com/icydoge/yronwood/config"
 	"github.com/icydoge/yronwood/types"
 )
@@ -32,16 +33,16 @@ func listImages(req typhon.Request) typhon.Response {
 	}
 
 	if body.AccessType != config.ConfigAccessTypePublic {
-		authSuccess, err := doBasicAuth(body.Auth.Secret)
+		authSuccess, err := auth.VerifyToken(body.Token)
 		if err != nil {
 			slog.Error(req, "Error authenticating: %v", err)
 			return typhon.Response{Error: terrors.InternalService("", "Error encountered authenticating you", nil)}
 		}
 		if !authSuccess {
-			if body.Auth.Secret == "" {
+			if body.Token == "" {
 				return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
 			}
-			return typhon.Response{Error: terrors.Unauthorized("bad_access", "Unauthorized access for this access type", nil)}
+			return typhon.Response{Error: terrors.Forbidden("bad_access", "Unauthorized access for this access type", nil)}
 		}
 	}
 

@@ -13,6 +13,7 @@ import (
 	"github.com/monzo/terrors"
 	"github.com/monzo/typhon"
 
+	"github.com/icydoge/yronwood/auth"
 	"github.com/icydoge/yronwood/config"
 	"github.com/icydoge/yronwood/types"
 )
@@ -42,16 +43,16 @@ func uploadImage(req typhon.Request) typhon.Response {
 	}
 
 	// Auth required for uploading images.
-	authenticated, err := doBasicAuth(body.Auth.Secret)
+	authenticated, err := auth.VerifyToken(body.Token)
 	if err != nil {
 		slog.Error(req, "Error authenticating client: %v", err)
 		return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
 	}
 	if !authenticated {
-		if body.Auth.Secret == "" {
+		if body.Token == "" {
 			return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
 		}
-		return typhon.Response{Error: terrors.Unauthorized("", "Authentication failure", nil)}
+		return typhon.Response{Error: terrors.Forbidden("", "Authentication failure", nil)}
 	}
 
 	if len(body.Payload) == 0 || len(body.Payload) > int(maxUploadSize) {

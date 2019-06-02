@@ -7,10 +7,6 @@ import (
 	"github.com/monzo/terrors"
 )
 
-const (
-	authenticationMethodBasic = "BASIC"
-)
-
 var (
 	ConfigListenAddr                = getConfigFromOSEnv("YRONWOOD_LISTEN_ADDR", ":8080", true)
 	ConfigStorageDirectoryPublic    = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PUBLIC", "/images/uploads/public", true)
@@ -21,10 +17,10 @@ var (
 	ConfigAccessTypePrivate         = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_PRIVATE", "private", true)
 	ConfigMaxFileSize               = getConfigFromOSEnv("YRONWOOD_MAX_FILE_SIZE", "25165824", true) // 24MB
 	ConfigPermittedExtensions       = getConfigFromOSEnv("YRONWOOD_PERMITTED_EXTENSIONS", "jpeg|jpg|png|gif", true)
-	ConfigAuthenticationMethod      = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_METHOD", authenticationMethodBasic, true)
+	ConfigAuthenticationSigningKey  = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_SIGHNING_KEY", "", false)
 	ConfigAuthenticationBasicSecret = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SECRET", "", false)
 	ConfigAuthenticationBasicSalt   = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SALT", "", false)
-	ConfigCORSAllowedOrigin         = getConfigFromOSEnv("YRONWOOD_CORS_ALLOWED_ORIGIN", "https://images.scy.email", false)
+	ConfigCORSAllowedOrigin         = getConfigFromOSEnv("YRONWOOD_CORS_ALLOWED_ORIGIN", "https://images.scy.email", true)
 )
 
 // This is intended to run inside Kubernetes as a pod, so we just set service Configurations from deployment Configuration.

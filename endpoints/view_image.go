@@ -11,6 +11,7 @@ import (
 	"github.com/monzo/terrors"
 	"github.com/monzo/typhon"
 
+	"github.com/icydoge/yronwood/auth"
 	"github.com/icydoge/yronwood/config"
 )
 
@@ -28,17 +29,17 @@ func viewImage(req typhon.Request) typhon.Response {
 	}
 
 	// Auth optional for public images and unlisted images.
-	authenticated, err := doBasicAuth(req.FormValue("secret"))
+	authenticated, err := auth.VerifyToken(req.FormValue("token"))
 	if err != nil {
 		slog.Error(req, "Error authenticating client: %v", err)
 		return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
 	}
 
 	if accessType == config.ConfigAccessTypePrivate && !authenticated {
-		if req.FormValue("secret") == "" {
+		if req.FormValue("token") == "" {
 			return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
 		}
-		return typhon.Response{Error: terrors.Unauthorized("", "Authentication failure", nil)}
+		return typhon.Response{Error: terrors.Forbidden("", "Authentication failure", nil)}
 	}
 
 	if !validateFilename(fileName) {
