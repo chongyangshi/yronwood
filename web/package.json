@@ -1,0 +1,35 @@
+{
+    "title": "Yronwood",
+    "name": "yronwood",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "gulp watch"
+    },
+    "description": "Front end interface for the Yronwood image gallery",
+    "keywords": [
+        "images"
+    ],
+    "homepage": "https://github.com/icydoge/yronwood",
+    "bugs": {
+        "url": "https://github.com/icydoge/yronwood"
+    },
+    "license": "MIT",
+    "author": "icydoge",
+    "contributors": [
+        "Based on startbootstrap \"bare\" (https://startbootstrap.com/template-overviews/bare)"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/icydoge/yronwood.git"
+    },
+    "dependencies": {
+        "bootstrap": "4.3.1",
+        "jquery": "3.4.1"
+    },
+    "devDependencies": {
+        "browser-sync": "2.26.5",
+        "del": "^4.1.1",
+        "gulp": "4.0.2",
+        "merge-stream": "^1.0.1"
+    }
+}

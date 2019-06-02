@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/icydoge/yronwood/config"
 	"github.com/monzo/typhon"
 )
 
@@ -18,7 +19,7 @@ func Service() typhon.Service {
 	router.POST("/list", listImages)
 	router.GET("/robots.txt", handleRobots)
 
-	svc := router.Serve().Filter(typhon.ErrorFilter).Filter(typhon.H2cFilter).Filter(ClientErrorFilter)
+	svc := router.Serve().Filter(typhon.ErrorFilter).Filter(typhon.H2cFilter).Filter(ClientErrorFilter).Filter(CORSFilter)
 
 	return svc
 }
@@ -51,6 +52,12 @@ func ClientErrorFilter(req typhon.Request, svc typhon.Service) typhon.Response {
 		return rsp
 	}
 
+	return rsp
+}
+
+func CORSFilter(req typhon.Request, svc typhon.Service) typhon.Response {
+	rsp := svc(req)
+	rsp.Header.Set("Access-Control-Allow-Origin", config.ConfigCORSAllowedOrigin)
 	return rsp
 }
 

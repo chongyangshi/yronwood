@@ -19,7 +19,7 @@ import (
 
 var (
 	permittedExtensions  = strings.Split(config.ConfigPermittedExtensions, "|")
-	permittedComposition = regexp.MustCompile(`[a-zA-Z0-9]+`)
+	permittedComposition = regexp.MustCompile(`[a-zA-Z0-9-_]+`)
 )
 
 func doBasicAuth(secret string) (bool, error) {

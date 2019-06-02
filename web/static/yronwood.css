@@ -1,0 +1,19 @@
+span.index-icon {
+    color: silver;
+    padding-right: 20px;
+}
+
+div.padded-row {
+    padding-bottom: 5vh;
+}
+
+div.grid-image {
+    text-align: center;
+}
+
+img.grid-image {
+    max-width: 30vw;
+    border-color: silver;
+    border-style: dotted;
+    border-width: 1px;
+}

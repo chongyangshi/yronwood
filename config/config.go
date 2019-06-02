@@ -24,6 +24,7 @@ var (
 	ConfigAuthenticationMethod      = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_METHOD", authenticationMethodBasic, true)
 	ConfigAuthenticationBasicSecret = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SECRET", "", false)
 	ConfigAuthenticationBasicSalt   = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SALT", "", false)
+	ConfigCORSAllowedOrigin         = getConfigFromOSEnv("YRONWOOD_CORS_ALLOWED_ORIGIN", "https://images.scy.email", false)
 )
 
 // This is intended to run inside Kubernetes as a pod, so we just set service Configurations from deployment Configuration.
