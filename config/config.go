@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/monzo/terrors"
 )
@@ -39,7 +40,7 @@ func getConfigFromOSEnv(key, defaultValue string, canBeEmpty bool) string {
 
 // FileExtensionToContentType returns the appropriate HTTP content type for a given extension.
 func FileExtensionToContentType(extension string) string {
-	switch extension {
+	switch strings.ToLower(extension) {
 	case "jpg", "jpeg":
 		return "image/jpeg"
 	case "png":

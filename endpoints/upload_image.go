@@ -80,15 +80,15 @@ func uploadImage(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.InternalService("", "Error encountered retrieving file", nil)}
 	}
 
+	validChecksum, err := validateChecksum([]byte(body.Payload), body.Checksum)
+	if err != nil || !validChecksum {
+		return typhon.Response{Error: terrors.BadRequest("bad_payload", "Invalid payload, could not verify checksum", nil)}
+	}
+
 	decodedPayload, err := base64.StdEncoding.DecodeString(body.Payload)
 	if err != nil {
 		slog.Error(req, "Error decoding base64 payload: %v", err)
 		return typhon.Response{Error: terrors.BadRequest("bad_payload", "Invalid payload, could not decode", nil)}
-	}
-
-	validChecksum, err := validateChecksum(decodedPayload, body.Checksum)
-	if err != nil || !validChecksum {
-		return typhon.Response{Error: terrors.BadRequest("bad_payload", "Invalid payload, could not verify checksum", nil)}
 	}
 
 	if readStoredImageByAccessType(req, body.Metadata.FileName, body.AccessType) != nil {

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 
 	"github.com/icydoge/yronwood/config"
 	"github.com/monzo/typhon"
@@ -57,8 +58,19 @@ func ClientErrorFilter(req typhon.Request, svc typhon.Service) typhon.Response {
 }
 
 func CORSFilter(req typhon.Request, svc typhon.Service) typhon.Response {
+	if req.Method == http.MethodOptions {
+		rsp := typhon.NewResponse(req)
+		rsp.Header.Set("Access-Control-Allow-Origin", config.ConfigCORSAllowedOrigin)
+		rsp.Header.Set("Access-Control-Allow-Methods", "GET, PUT, POST")
+		rsp.Body = ioutil.NopCloser(bytes.NewReader([]byte("ok")))
+		rsp.StatusCode = http.StatusOK
+		return rsp
+	}
+
 	rsp := svc(req)
 	rsp.Header.Set("Access-Control-Allow-Origin", config.ConfigCORSAllowedOrigin)
+	rsp.Header.Set("Access-Control-Allow-Methods", "GET, PUT, POST")
+
 	return rsp
 }
 

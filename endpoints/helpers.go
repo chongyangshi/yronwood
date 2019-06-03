@@ -3,7 +3,7 @@ package endpoints
 import (
 	"context"
 	"crypto/sha256"
-	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -39,7 +39,7 @@ func validateChecksum(payload []byte, checksum string) (bool, error) {
 		return false, terrors.Wrap(err, nil)
 	}
 
-	inputSHA256 := base64.StdEncoding.EncodeToString(inputHash.Sum(nil))
+	inputSHA256 := hex.EncodeToString(inputHash.Sum(nil))
 	if inputSHA256 == checksum {
 		return true, nil
 	}
@@ -64,7 +64,7 @@ func validateFilename(fileName string) bool {
 
 	validExtension := false
 	for _, extension := range permittedExtensions {
-		if extension == fileNameSplit[1] {
+		if extension == strings.ToLower(fileNameSplit[1]) {
 			validExtension = true
 			break
 		}
@@ -97,6 +97,28 @@ func validateAccessType(accessType string) (bool, string) {
 	}
 
 	return false, ""
+}
+
+// Private access type also gives access to public and unlisted images
+func accessTypeToPaths(accessType string) map[string]string {
+	switch accessType {
+	case config.ConfigAccessTypePublic:
+		return map[string]string{
+			config.ConfigAccessTypePublic: config.ConfigStorageDirectoryPublic,
+		}
+	case config.ConfigAccessTypeUnlisted:
+		return map[string]string{
+			config.ConfigAccessTypeUnlisted: config.ConfigStorageDirectoryUnlisted,
+		}
+	case config.ConfigAccessTypePrivate:
+		return map[string]string{
+			config.ConfigAccessTypePublic:   config.ConfigStorageDirectoryPublic,
+			config.ConfigAccessTypeUnlisted: config.ConfigStorageDirectoryUnlisted,
+			config.ConfigAccessTypePrivate:  config.ConfigStorageDirectoryPrivate,
+		}
+	}
+
+	return nil
 }
 
 // readFile queries directory for existence of file, and if exists, return content

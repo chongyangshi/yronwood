@@ -9,14 +9,16 @@ type AuthenticateResponse struct {
 }
 
 type ImageMetadata struct {
-	FileName string `json:"file_name"`
+	FileName   string `json:"file_name"`
+	AccessPath string `json:"access_path"`
+	Uploaded   string `json:"uploaded"`
 }
 
 type ImageUploadRequest struct {
 	Token      string        `json:"token"`
 	Metadata   ImageMetadata `json:"metadata"`
 	Payload    string        `json:"payload"`
-	Checksum   string        `json:"checksum"` // SHA256 before encoding
+	Checksum   string        `json:"checksum"` // SHA256 after encoding
 	AccessType string        `json:"access_type"`
 }
 

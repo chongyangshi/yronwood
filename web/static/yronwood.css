@@ -2,6 +2,14 @@
     display: none;
 }
 
+#yronwood-success:empty{
+    display: none;
+}
+
+#images-container {
+    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAO0lEQVQoU2NkIAIwElJz6NCh/3gVgRTY2dkxEjQJZBNWRTATYE7BUISuAKdJ6J6Bm4TNBBTr8CkAKQQA6oYXT+kQKfMAAAAASUVORK5CYII=) repeat;
+}
+
 span.index-icon {
     color: silver;
     padding-right: 20px;
@@ -14,10 +22,12 @@ div.padded-row {
 
 div.grid-image {
     text-align: center;
+    margin-bottom: 2.5vh;
 }
 
 img.grid-image {
     max-width: 30vw;
+    min-width: 30vw;
     border-color: silver;
     border-style: dotted;
     border-width: 1px;

@@ -28,18 +28,20 @@ func viewImage(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.NotFound("not_found", "Requested image is not found", nil)}
 	}
 
-	// Auth optional for public images and unlisted images.
-	authenticated, err := auth.VerifyToken(req.FormValue("token"))
-	if err != nil {
-		slog.Error(req, "Error authenticating client: %v", err)
-		return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
-	}
-
-	if accessType == config.ConfigAccessTypePrivate && !authenticated {
-		if req.FormValue("token") == "" {
-			return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+	if accessType == config.ConfigAccessTypePrivate {
+		// Auth optional for public images and unlisted images.
+		authenticated, err := auth.VerifyToken(req.FormValue("token"))
+		if err != nil {
+			slog.Error(req, "Error authenticating client: %v", err)
+			return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
 		}
-		return typhon.Response{Error: terrors.Forbidden("", "Authentication failure", nil)}
+
+		if !authenticated {
+			if req.FormValue("token") == "" {
+				return typhon.Response{Error: terrors.Unauthorized("", "Authentication required", nil)}
+			}
+			return typhon.Response{Error: terrors.Forbidden("", "Authentication failure", nil)}
+		}
 	}
 
 	if !validateFilename(fileName) {

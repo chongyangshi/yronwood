@@ -29,7 +29,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" data-target="#authenticateModel"><span class="oi oi-lock-locked index-icon" aria-hidden="true" id="authenticateIcon"></span></a>
+            <a class="nav-link" data-toggle="modal" data-target="#authenticateModal"><span class="oi oi-lock-locked index-icon" aria-hidden="true" id="authenticateIcon"></span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/icydoge/yronwood"><span class="oi oi-code index-icon" aria-hidden="true"></span></a>
@@ -42,6 +42,7 @@
     </div>
   </nav>
 
+  <div class="alert alert-success" role="alert" id="yronwood-success"></div>
   <div class="alert alert-danger" role="alert" id="yronwood-error"></div>
 
   <!-- Page Content -->
@@ -52,11 +53,11 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="static/yronwood.js"></script>
   
-  <div class="modal fade" id="authenticateModel" tabindex="-1" role="dialog" aria-labelledby="authenticateModelTitle" aria-hidden="true">
+  <div class="modal fade" id="authenticateModal" tabindex="-1" role="dialog" aria-labelledby="authenticateModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="authenticateModelTitle">Authenticate</h5>
+          <h5 class="modal-title" id="authenticateModalTitle">Authenticate</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -70,7 +71,7 @@
           </div>          
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="authenticateButton">Authenticate</button>
+          <button type="submit" class="btn btn-primary" data-dismiss="modal" id="authenticateButton">Authenticate</button>
         </div>
       </div>
     </div>
@@ -86,13 +87,24 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" id="uploadFile">
-            <label class="custom-file-label" for="uploadFile">Choose file</label>
+          <label for="uploadFile">Choose File</label>
+          <div class="input-group mb-3">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="uploadFile">
+              <label class="custom-file-label" for="uploadFile">Choose file</label>
+            </div> 
           </div>   
+          <label for="accessTypeSelection">Access Type</label>
+          <div class="input-group mb-3">
+            <select class="form-control" id="accessTypeSelection">
+              <option value="public">Public</option>
+              <option value="big">Unlisted</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="uploadButton">Upload</button>
+          <button type="submit" class="btn btn-primary" data-dismiss="modal" id="uploadButton">Upload</button>
         </div>
       </div>
     </div>
