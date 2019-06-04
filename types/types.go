@@ -26,6 +26,7 @@ type ImageUploadRequest struct {
 type ImageListRequest struct {
 	Token      string `json:"token"`
 	AccessType string `json:"access_type"`
+	Page       int    `json:"page"`
 }
 
 type ImageListResponse struct {

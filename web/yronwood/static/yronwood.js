@@ -4,25 +4,27 @@ const ACCESS_TYPE_PRIVATE = "private"
 var API_BASE = "https://images.ebornet.com"
 if (window.location.hostname == undefined || window.location.hostname == "") {
     // For local running, served by browser from file.
-    API_BASE = "http://127.0.0.1:18080"
+    API_BASE = "http://127.0.0.1:18080";
 }
 
 var current_accss_type = ACCESS_TYPE_PUBLIC
+var current_page = 1
 
 $( document ).ready(function() {
     var token = get_basic_auth_token();
     if (token !== "") {
         set_authenticated();  
     } 
-    list_images(current_accss_type);
+    list_images(current_accss_type, current_page);
 });
 
-function list_images(access_type) {
+function list_images(access_type, page) {
     $.ajax({
         url: API_BASE + "/list",
         type: "POST",
         data: JSON.stringify({
             "access_type": access_type,
+            "page": page,
             "token": get_basic_auth_token(),
         }),
         success: function(result){
@@ -56,7 +58,7 @@ function list_images(access_type) {
         },
         error: function(result){
             if (result.responseText == undefined || result.responseText == "") {
-                $("#yronwood-error").text("Error: unknown (" + result.statusText +")");
+                $("#yronwood-error").text("Error: unknown (" + result.statusText +"). Connection to the API server may have failed.");
             } else {
                 var err = $.parseJSON(result.responseText)
                 $("#yronwood-error").text("Error: " + err.message + " (" + err.code + ")");
@@ -87,7 +89,8 @@ $(document).on("click", "#authenticateButton", function(event) {
                 $("#yronwood-success").text("Successfully authenticated!");
                 set_basic_auth_token(result.token);
                 set_authenticated();
-                list_images(current_accss_type);
+                current_page = 1;
+                list_images(current_accss_type, current_page);
             } else {
                 $("#yronwood-error").text("Could not authenticate!");
             }
@@ -137,7 +140,8 @@ function doUploadFile(payload, checksum, filename) {
         }),
         success: function(result){
             $("#yronwood-success").text("Upload successful");
-            list_images(current_accss_type);
+            current_page = 1;
+            list_images(current_accss_type, current_page);
         },
         error: function(result){
             if (result.responseText == undefined || result.responseText == "") {
@@ -172,6 +176,21 @@ $(document).on("click", "#uploadButton", function(event) {
     }
     reader.readAsArrayBuffer(file);
 });
+
+$(".previousPage").unbind().click(function(event) {
+    if (current_page > 1) {
+        current_page--;
+    }
+    list_images(current_accss_type, current_page);
+    $(".currentPage").text(current_page.toString());
+});
+
+$(".nextPage").unbind().click(function(event) {
+    current_page++;
+    list_images(current_accss_type, current_page);
+    $(".currentPage").text(current_page.toString());
+});
+
 
 function set_authenticated() {
     current_accss_type = ACCESS_TYPE_PRIVATE;

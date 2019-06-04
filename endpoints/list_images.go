@@ -16,6 +16,12 @@ import (
 	"github.com/icydoge/yronwood/types"
 )
 
+const (
+	defaultPagingStart = 0
+	defaultPagingCount = 20
+	pageLimit          = 100
+)
+
 type imageMetadata struct {
 	FileName   string
 	AccessPath string
@@ -78,12 +84,19 @@ func listImages(req typhon.Request) typhon.Response {
 		images = append(images, file)
 	}
 
-	// Most recent first.
+	// Most recent first. This application deals with small number of files, so backend
+	// always lists all files of the access directory presently.
 	sort.Slice(images, func(i, j int) bool {
 		return images[i].Uploaded.After(images[j].Uploaded)
 	})
 
-	return req.Response(types.ImageListResponse{Images: internalMetadataToResponseList(images)})
+	page := body.Page
+	if page > pageLimit {
+		// Hard stack limit on runtimes not optimising tail recursions.
+		page = pageLimit
+	}
+	start, end := boundPaging(body.Page, len(images))
+	return req.Response(types.ImageListResponse{Images: internalMetadataToResponseList(images[start:end])})
 }
 
 func internalMetadataToResponseList(images []imageMetadata) []types.ImageMetadata {
@@ -97,4 +110,24 @@ func internalMetadataToResponseList(images []imageMetadata) []types.ImageMetadat
 	}
 
 	return files
+}
+
+func boundPaging(page, available int) (int, int) {
+	if page <= 0 {
+		return defaultPagingStart, boundMin(defaultPagingCount, available)
+	}
+
+	if page*defaultPagingCount <= available {
+		return (page - 1) * defaultPagingCount, page * defaultPagingCount
+	}
+
+	// Tail recursive, sadly golang likely still doesn't optimise for it.
+	return boundPaging(page-1, available)
+}
+
+func boundMin(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
 }
