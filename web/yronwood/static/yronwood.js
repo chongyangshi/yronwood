@@ -65,6 +65,14 @@ function list_images(access_type) {
     });
 }
 
+$(document).on("click", "#authenticateIcon", function(event) {
+    $('#authenticateModal').modal('show');
+});
+
+$(document).on("click", "#uploadIcon", function(event) {
+    $('#uploadModal').modal('show');
+});
+
 $(document).on("click", "#authenticateButton", function(event) {
     $("#yronwood-success").text("");
     $("#yronwood-error").text("");
