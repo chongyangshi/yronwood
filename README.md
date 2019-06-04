@@ -6,6 +6,8 @@ It is designed to run as a microservice container in Kubernetes, but can also ru
 
 It serves as a drop-in replacement for my old [Lychee](https://github.com/LycheeOrg/Lychee)-based PHP image gallery. This ~9MB container is much leaner and faster than the old PHP/MySQL-based solution.
 
+![Yronwood](https://images.ebornet.com/uploads/big/17af8d5a4ae2ae708e821308812ccf62.png)
+
 ## Usage
 
 See [`Dockerfile`](https://github.com/icydoge/yronwood/tree/master/Dockerfile) for how it is built and ran; and [`k8s.yaml`](https://github.com/icydoge/yronwood/tree/master/k8s.yaml) for how I have configured it in my cluster.
