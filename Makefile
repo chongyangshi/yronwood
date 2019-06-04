@@ -22,7 +22,7 @@ push:
 	docker push ${REPOSITORY}:${SVC}-${COMMIT}
 
 web-build:
-	docker build -t ${WEB_SVC} --build-arg ALPINE_VERSION=${WEB_ALPINE_VERSION} ./nginx
+	docker build -t ${WEB_SVC} --build-arg ALPINE_VERSION=${WEB_ALPINE_VERSION} ./web
 
 web-pull:
 	docker pull alpine:${WEB_ALPINE_VERSION}
