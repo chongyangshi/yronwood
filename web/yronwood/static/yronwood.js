@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:18080"
+const API_BASE = "https://images.ebornet.com"
 const ACCESS_TYPE_PUBLIC = "public"
 const ACCESS_TYPE_PRIVATE = "private"
 
