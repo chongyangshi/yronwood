@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-images-scy-email
+  labels:
+    app: web-images-scy-email
+spec:
+  selector:
+    matchLabels:
+      app: web-images-scy-email
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: web-images-scy-email
+    spec:
+      containers:
+        - name: yronwood
+          image: icydoge/web:web-images-scy-email-ba35249
+          ports:
+          - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 300m
+              memory: 768Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-images-scy-email
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: web-images-scy-email

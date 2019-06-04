@@ -18,7 +18,7 @@ See [`types/types.go`](https://github.com/icydoge/yronwood/tree/master/types/typ
 
 ## Web Interface
 
-A simple web interface for showing and uploading the images is available as a separate containerized web service in `/web`, and configurations in `/nginx`.
+A simple web interface for showing and uploading the images is available as a separate containerized web service in `/web/yronwood`, with configurations enclosed. It runs as a separate web service in Kubernetes in my setup.
 
 ## Credits
 
