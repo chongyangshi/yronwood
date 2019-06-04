@@ -1,6 +1,11 @@
-const API_BASE = "https://images.ebornet.com"
 const ACCESS_TYPE_PUBLIC = "public"
 const ACCESS_TYPE_PRIVATE = "private"
+
+var API_BASE = "https://images.ebornet.com"
+if (window.location.hostname == undefined || window.location.hostname == "") {
+    // For local running, served by browser from file.
+    API_BASE = "http://127.0.0.1:18080"
+}
 
 var current_accss_type = ACCESS_TYPE_PUBLIC
 
