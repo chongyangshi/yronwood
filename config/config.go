@@ -10,6 +10,7 @@ import (
 
 var (
 	ConfigListenAddr                = getConfigFromOSEnv("YRONWOOD_LISTEN_ADDR", ":8080", true)
+	ConfigIndexRedirect             = getConfigFromOSEnv("YRONWOOD_INDEX_REDIRECT", "https://images.scy.email", true)
 	ConfigStorageDirectoryPublic    = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PUBLIC", "/images/uploads/public", true)
 	ConfigStorageDirectoryUnlisted  = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_UNLISTED", "/images/uploads/big", true)
 	ConfigStorageDirectoryPrivate   = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PRIVATE", "/images/uploads/private", true)

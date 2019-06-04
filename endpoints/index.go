@@ -1,7 +1,24 @@
 package endpoints
 
-import "github.com/monzo/typhon"
+import (
+	"bytes"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/monzo/typhon"
+
+	"github.com/icydoge/yronwood/config"
+)
 
 func handleIndex(req typhon.Request) typhon.Response {
-	return req.Response("Yronwood is a private image storage and sharing service.")
+	response := fmt.Sprintf("Click <a href='%s'>here</a> if you are not being redirectd automatically.</a>")
+
+	rsp := typhon.NewResponse(req)
+	rsp.Header.Set("Location", config.ConfigIndexRedirect)
+	rsp.Header.Set("Content-Type", "text/plain")
+	rsp.StatusCode = http.StatusMovedPermanently
+	rsp.Body = ioutil.NopCloser(bytes.NewReader([]byte(response)))
+
+	return rsp
 }

@@ -7,6 +7,7 @@ KUdlxCzAQZX2vlsQIzv9QdbX1gd4laatRA==
 -----END PRIVATE KEY-----"
 
 export YRONWOOD_LISTEN_ADDR="127.0.0.1:18080"
+export YRONWOOD_INDEX_REDIRECT="https://google.co.uk"
 export YRONWOOD_STORAGE_DIRECTORY_PUBLIC="/tmp/yronwood_public"
 export YRONWOOD_STORAGE_DIRECTORY_UNLISTED="/tmp/yronwood_unlisted"
 export YRONWOOD_STORAGE_DIRECTORY_PRIVATE="/tmp/yronwood_private"
