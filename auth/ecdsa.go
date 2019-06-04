@@ -38,10 +38,10 @@ type ECDSASignature struct {
 
 func init() {
 	block, _ := pem.Decode([]byte(config.ConfigAuthenticationSigningKey))
-	x509Encoded := block.Bytes
 	if block == nil {
 		panic(fmt.Errorf("Could not decode ECDSA signing key from %s", config.ConfigAuthenticationSigningKey))
 	}
+	x509Encoded := block.Bytes
 
 	var err error
 	signingKey, err = x509.ParseECPrivateKey(x509Encoded)
