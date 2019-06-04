@@ -14,6 +14,10 @@ See [`config/config.go`](https://github.com/icydoge/yronwood/tree/master/config/
 
 See [`types/types.go`](https://github.com/icydoge/yronwood/tree/master/types/types.go) for the API schema. All non-GET requests have JSON request payloads, while GET requests use query string params.
 
+## Web Interface
+
+A simple web interface for showing and uploading the images is available as a separate containerized web service in `/web`, and configurations in `/nginx`.
+
 ## Credits
 
 I build Go services at [Monzo](https://monzo.com), so this project has extensively relied on some of Monzo's open-source projects I use day-to-day:
