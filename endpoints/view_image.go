@@ -13,6 +13,7 @@ import (
 
 	"github.com/icydoge/yronwood/auth"
 	"github.com/icydoge/yronwood/config"
+	"github.com/icydoge/yronwood/thumbnail"
 )
 
 func viewImage(req typhon.Request) typhon.Response {
@@ -48,7 +49,17 @@ func viewImage(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.BadRequest("invalid_filename", fmt.Sprintf("File name %s is invalid", fileName), nil)}
 	}
 
-	imageBytes := readStoredImageByAccessType(req, fileName, accessType)
+	var imageBytes []byte
+	if req.FormValue("thumbnail") == "yes" {
+		imageBytes, err = readThumbnailByAccessType(req, fileName, accessType)
+		if err != nil {
+			slog.Error(req, "Error reading thumbnail for image %s of access type %s: %v", fileName, accessType, err)
+			return typhon.Response{Error: terrors.InternalService("thumbnail_error", "Could not read thumbnail due to an internal error", nil)}
+		}
+	} else {
+		imageBytes = readStoredImageByAccessType(req, fileName, accessType)
+	}
+
 	if imageBytes != nil {
 		response := typhon.NewResponse(req)
 		response.Body = ioutil.NopCloser(bytes.NewReader(imageBytes))
@@ -71,6 +82,19 @@ func readStoredImageByAccessType(ctx context.Context, fileName, accessType strin
 	}
 
 	return imageBytes
+}
+
+func readThumbnailByAccessType(ctx context.Context, fileName, accessType string) ([]byte, error) {
+	switch accessType {
+	case config.ConfigAccessTypePublic:
+		return thumbnail.GetThumbnailForImage(ctx, fileName, config.ConfigStorageDirectoryPublic, accessType)
+	case config.ConfigAccessTypeUnlisted:
+		return thumbnail.GetThumbnailForImage(ctx, fileName, config.ConfigStorageDirectoryUnlisted, accessType)
+	case config.ConfigAccessTypePrivate:
+		return thumbnail.GetThumbnailForImage(ctx, fileName, config.ConfigStorageDirectoryPrivate, accessType)
+	}
+
+	return nil, nil
 }
 
 // For legacy-compatible reasons, we process image url in a pseudo-static manner (apihost/accesstype/filename.jpg)

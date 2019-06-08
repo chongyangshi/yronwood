@@ -14,6 +14,7 @@ var (
 	ConfigStorageDirectoryPublic    = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PUBLIC", "/images/uploads/public", true)
 	ConfigStorageDirectoryUnlisted  = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_UNLISTED", "/images/uploads/big", true)
 	ConfigStorageDirectoryPrivate   = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PRIVATE", "/images/uploads/private", true)
+	ConfigStorageDirectoryThumbnail = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_THUMBNAIL", "/images/uploads/thumbnail", true)
 	ConfigAccessTypePublic          = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_PUBLIC", "public", true)
 	ConfigAccessTypeUnlisted        = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_UNLISTED", "big", true)
 	ConfigAccessTypePrivate         = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_PRIVATE", "private", true)

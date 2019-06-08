@@ -55,6 +55,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:088f61f6fd284c2dd680a95bda8c84160cfee3b7958aa688469f52702eae2a73"
+  name = "github.com/nfnt/resize"
+  packages = ["."]
+  pruneopts = ""
+  revision = "83c6a9932646f83e3267f353373d47347b6036b2"
+
+[[projects]]
+  branch = "master"
   digest = "1:55c48c9cfdf8bab6f4911f621616fbe223c0b72a6df9aab6b172ab7e5cfc6bd2"
   name = "github.com/nu7hatch/gouuid"
   packages = ["."]
@@ -105,8 +113,10 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/monzo/slog",
     "github.com/monzo/terrors",
     "github.com/monzo/typhon",
+    "github.com/nfnt/resize",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

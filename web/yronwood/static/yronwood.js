@@ -51,7 +51,7 @@ function list_images(access_type, page) {
                     if (secret != null && secret != "") {
                         image_link += "?token=" + encodeURIComponent(secret)
                     }
-                    $(current_row).append("<div class='col-sm grid-image'><a target='_blank' href='"+ image_link + "'><img class='grid-image' src='" + image_link +"' /></a></div>");
+                    $(current_row).append("<div class='col-sm grid-image'><a target='_blank' href='"+ image_link + "'><img class='grid-image' src='" + image_link +"?thumbnail=yes' /></a></div>");
                     row_size++;
                 }
             }
