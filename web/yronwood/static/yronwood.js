@@ -46,12 +46,15 @@ function list_images(access_type, page) {
                         $("#images-container").append(current_row);
                         row_size = 0;
                     }
-                    var image_link = API_BASE + "/uploads/" + encodeURIComponent(image.access_path) + "/" + encodeURIComponent(image.file_name)
+                    var image_link = API_BASE + "/uploads/" + encodeURIComponent(image.access_path) + "/" + encodeURIComponent(image.file_name) + '?'
                     var secret = get_basic_auth_token();
                     if (secret != null && secret != "") {
-                        image_link += "?token=" + encodeURIComponent(secret)
+                        image_link = insertParam(image_link, "token", encodeURIComponent(secret))
                     }
-                    $(current_row).append("<div class='col-sm grid-image'><a target='_blank' href='"+ image_link + "'><img class='grid-image' src='" + image_link +"?thumbnail=yes' /></a></div>");
+
+                    thumbnail_link = insertParam(image_link, "thumbnail", "yes")
+                    $(current_row).append("<div class='col-sm grid-image'><a target='_blank' href='"+ image_link + "'><img class='grid-image' src='" + thumbnail_link +"' /></a></div>");
+                    
                     row_size++;
                 }
             }
@@ -237,4 +240,29 @@ function randomFileName(length) {
        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+// Adapted from https://stackoverflow.com/a/487049
+function insertParam(url, key, value)
+{
+    key = encodeURI(key); value = encodeURI(value);
+
+    var kvp = url.split('&');
+    var i=kvp.length; var x; while(i--) 
+    {
+        x = kvp[i].split('=');
+
+        if (x[0]==key)
+        {
+            x[1] = value;
+            kvp[i] = x.join('=');
+            break;
+        }
+    }
+
+    if (i<0) {
+        kvp[kvp.length] = [key,value].join('=');
+    }
+    
+    return kvp.join('&'); 
 }

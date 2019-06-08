@@ -1,7 +1,6 @@
 package thumbnail
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -13,6 +12,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"sync"
 
 	"github.com/monzo/slog"
 	"github.com/nfnt/resize"
@@ -20,18 +20,23 @@ import (
 	"github.com/icydoge/yronwood/config"
 )
 
-const thumbnailWidth = 200
+const thumbnailWidth = 800
+
+var thumbnailPathMutex = sync.Mutex{}
 
 func GetThumbnailForImage(ctx context.Context, fileName, storagePath, accessType string) ([]byte, error) {
 	thumbnailPath := config.ConfigStorageDirectoryThumbnail
+	thumbnailPathMutex.Lock()
 	if _, err := os.Stat(thumbnailPath); os.IsNotExist(err) {
 		slog.Info(ctx, "Thumbnail directory %s does not exist, attempting to create it", thumbnailPath)
 		mkdirErr := os.Mkdir(config.ConfigStorageDirectoryThumbnail, 0755)
 		if mkdirErr != nil {
 			slog.Error(ctx, "Could not create non-existing storage directory %s: %v", thumbnailPath, err)
+			thumbnailPathMutex.Unlock()
 			return nil, mkdirErr
 		}
 	}
+	thumbnailPathMutex.Unlock()
 
 	thumbnailFilePath := path.Join(thumbnailPath, getThumbnailFileName(fileName, accessType))
 	if _, err := os.Stat(thumbnailFilePath); err == nil {
@@ -71,19 +76,23 @@ func GetThumbnailForImage(ctx context.Context, fileName, storagePath, accessType
 		return nil, err
 	}
 
-	thumbnail := resize.Thumbnail(thumbnailWidth, 0, img, resize.Lanczos3)
-	encodedThumbnail, err := encodeImage(fileName, thumbnail)
+	thumbnail := resize.Resize(thumbnailWidth, 0, img, resize.Lanczos3)
+	thumbnailFilePath, err = encodeImageToFile(fileName, thumbnailPath, accessType, thumbnail)
 	if err != nil {
 		slog.Debug(ctx, "Could not encode thumbnail of image %s: %v", filePath, err)
 		return nil, err
 	}
 
-	if err = ioutil.WriteFile(getThumbnailFileName(fileName, accessType), encodedThumbnail, 0644); err != nil {
-		slog.Debug(ctx, "Could not write thumbnail of image %s: %v", filePath, err)
-		return nil, err
+	if thumbnailFilePath != "" {
+		file, err := ioutil.ReadFile(thumbnailFilePath)
+		if err != nil {
+			slog.Debug(ctx, "Could not read thumnnail %s: %v", thumbnailFilePath, err)
+			return nil, err
+		}
+		return file, nil
 	}
 
-	return encodedThumbnail, nil
+	return nil, nil
 }
 
 func getThumbnailFileName(fileName, accessType string) string {
@@ -94,7 +103,7 @@ func getThumbnailFileName(fileName, accessType string) string {
 
 	name := strings.Join(fileNameComponents[0:len(fileNameComponents)-1], ".")
 	extension := fileNameComponents[len(fileNameComponents)-1]
-	thumbnailFileName := fmt.Sprintf("%s_%s.%s", name, "thumb", extension)
+	thumbnailFileName := fmt.Sprintf("%s_%s_%s.%s", name, accessType, "thumb", extension)
 
 	return thumbnailFileName
 }
@@ -118,31 +127,29 @@ func decodeImage(fileName string, filePayload []byte) (image.Image, error) {
 	return nil, nil
 }
 
-func encodeImage(fileName string, img image.Image) ([]byte, error) {
+func encodeImageToFile(fileName, storagePath, accessType string, img image.Image) (string, error) {
 	fileNameComponents := strings.Split(fileName, ".")
 	if len(fileNameComponents) < 2 {
-		return nil, nil
+		return "", nil
 	}
 	extension := fileNameComponents[len(fileNameComponents)-1]
 
-	var buf = bytes.Buffer{}
-	imageWriter := bufio.NewWriter(&buf)
+	thumbnailPath := path.Join(storagePath, getThumbnailFileName(fileName, accessType))
+	thumbnailFile, err := os.Create(thumbnailPath)
+	if err != nil {
+		return "", err
+	}
+	defer thumbnailFile.Close()
 
 	var encodeErr error
 	switch strings.ToLower(extension) {
 	case "jpg", "jpeg":
-		encodeErr = jpeg.Encode(imageWriter, img, nil)
+		encodeErr = jpeg.Encode(thumbnailFile, img, nil)
 	case "png":
-		encodeErr = png.Encode(imageWriter, img)
+		encodeErr = png.Encode(thumbnailFile, img)
 	case "gif":
-		encodeErr = gif.Encode(imageWriter, img, nil)
+		encodeErr = gif.Encode(thumbnailFile, img, nil)
 	}
 
-	flushErr := imageWriter.Flush()
-	if encodeErr != nil || flushErr != nil {
-		return nil, encodeErr
-	}
-
-	imageReader := bufio.NewReader(&buf)
-	return ioutil.ReadAll(imageReader)
+	return thumbnailPath, encodeErr
 }
