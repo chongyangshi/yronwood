@@ -22,7 +22,7 @@ push:
 	docker push ${REPOSITORY}:${SVC}-${COMMIT}
 
 clean:
-	docker image prune
+	docker image prune -f
 
 web-build:
 	docker build -t ${WEB_SVC} --build-arg ALPINE_VERSION=${WEB_ALPINE_VERSION} ./web
