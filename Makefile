@@ -7,12 +7,12 @@ REPOSITORY := 172.16.32.2:2443/go
 
 .PHONY: pull build push
 
-all: pull build push
+all: pull build push clean
 
-web: web-pull web-build web-push
+web: web-pull web-build web-push clean
 
 build:
-	docker build --rm -t ${SVC} .
+	docker build -t ${SVC} .
 
 pull:
 	docker pull golang:alpine
@@ -21,8 +21,11 @@ push:
 	docker tag ${SVC}:latest ${REPOSITORY}:${SVC}-${COMMIT}
 	docker push ${REPOSITORY}:${SVC}-${COMMIT}
 
+clean:
+	docker image prune
+
 web-build:
-	docker build --rm -t ${WEB_SVC} --build-arg ALPINE_VERSION=${WEB_ALPINE_VERSION} ./web
+	docker build -t ${WEB_SVC} --build-arg ALPINE_VERSION=${WEB_ALPINE_VERSION} ./web
 
 web-pull:
 	docker pull alpine:${WEB_ALPINE_VERSION}
