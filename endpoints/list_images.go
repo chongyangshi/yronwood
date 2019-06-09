@@ -18,8 +18,8 @@ import (
 
 const (
 	defaultPagingStart = 0
-	defaultPagingCount = 20
-	pageLimit          = 100
+	defaultPagingCount = 21
+	pageLimit          = 105
 )
 
 type imageMetadata struct {
