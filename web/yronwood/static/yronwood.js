@@ -92,8 +92,7 @@ $(document).on("click", "#authenticateButton", function(event) {
                 $("#yronwood-success").text("Successfully authenticated!");
                 set_basic_auth_token(result.token);
                 set_authenticated();
-                current_page = 1;
-                list_images(current_accss_type, current_page);
+                resetPaging();
             } else {
                 $("#yronwood-error").text("Could not authenticate!");
             }
@@ -143,8 +142,7 @@ function doUploadFile(payload, checksum, filename) {
         }),
         success: function(result){
             $("#yronwood-success").text("Upload successful");
-            current_page = 1;
-            list_images(current_accss_type, current_page);
+            resetPaging();
         },
         error: function(result){
             if (result.responseText == undefined || result.responseText == "") {
@@ -194,6 +192,15 @@ $(".nextPage").unbind().click(function(event) {
     $(".currentPage").text(current_page.toString());
 });
 
+$(".firstPage").unbind().click(function(event) {
+    resetPaging();
+});
+
+function resetPaging() {
+    current_page = 1;
+    list_images(current_accss_type, current_page);
+    $(".currentPage").text(current_page.toString());
+}
 
 function set_authenticated() {
     current_accss_type = ACCESS_TYPE_PRIVATE;
