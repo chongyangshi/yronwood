@@ -3,7 +3,7 @@ SVC := yronwood
 WEB_ALPINE_VERSION := 3.9
 WEB_SVC := web-images-scy-email
 COMMIT := $(shell git log -1 --pretty='%h')
-REPOSITORY := 172.16.32.2:2443/go
+REPOSITORY := 172.16.16.2:2443/go
 
 .PHONY: pull build push
 
