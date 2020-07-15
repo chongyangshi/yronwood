@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/icydoge/yronwood/config"
+	"github.com/chongyangshi/yronwood/config"
 	"github.com/monzo/typhon"
 )
 

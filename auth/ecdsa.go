@@ -24,7 +24,7 @@ import (
 
 	"github.com/monzo/terrors"
 
-	"github.com/icydoge/yronwood/config"
+	"github.com/chongyangshi/yronwood/config"
 )
 
 var (

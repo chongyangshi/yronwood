@@ -13,9 +13,9 @@ import (
 	"github.com/monzo/terrors"
 	"github.com/monzo/typhon"
 
-	"github.com/icydoge/yronwood/auth"
-	"github.com/icydoge/yronwood/config"
-	"github.com/icydoge/yronwood/types"
+	"github.com/chongyangshi/yronwood/auth"
+	"github.com/chongyangshi/yronwood/config"
+	"github.com/chongyangshi/yronwood/types"
 )
 
 var maxUploadSize int64

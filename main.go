@@ -11,8 +11,8 @@ import (
 
 	"github.com/monzo/typhon"
 
-	"github.com/icydoge/yronwood/config"
-	"github.com/icydoge/yronwood/endpoints"
+	"github.com/chongyangshi/yronwood/config"
+	"github.com/chongyangshi/yronwood/endpoints"
 )
 
 func main() {

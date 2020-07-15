@@ -17,4 +17,4 @@ export YRONWOOD_AUTHENTICATION_BASIC_SECRET="e5b84d4fe648cb166e6b14c87b55852b51b
 export YRONWOOD_AUTHENTICATION_BASIC_SALT="local-salt" # ^ = $(echo -n "local-secret:local-salt" | openssl dgst -sha256 -hex)
 export YRONWOOD_CORS_ALLOWED_ORIGIN="*"
 
-go run github.com/icydoge/yronwood
+go run github.com/chongyangshi/yronwood

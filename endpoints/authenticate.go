@@ -8,8 +8,8 @@ import (
 	"github.com/monzo/terrors"
 	"github.com/monzo/typhon"
 
-	"github.com/icydoge/yronwood/auth"
-	"github.com/icydoge/yronwood/types"
+	"github.com/chongyangshi/yronwood/auth"
+	"github.com/chongyangshi/yronwood/types"
 )
 
 const authTokenValidity = time.Duration(time.Hour * 12)

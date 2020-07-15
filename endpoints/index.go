@@ -8,7 +8,7 @@ import (
 
 	"github.com/monzo/typhon"
 
-	"github.com/icydoge/yronwood/config"
+	"github.com/chongyangshi/yronwood/config"
 )
 
 func handleIndex(req typhon.Request) typhon.Response {

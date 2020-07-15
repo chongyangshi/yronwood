@@ -17,7 +17,7 @@ import (
 	"github.com/monzo/slog"
 	"github.com/nfnt/resize"
 
-	"github.com/icydoge/yronwood/config"
+	"github.com/chongyangshi/yronwood/config"
 )
 
 const thumbnailWidth = 800
