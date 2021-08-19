@@ -3,8 +3,8 @@ FROM golang:alpine AS builder
 RUN apk update && apk add --no-cache git
 WORKDIR $GOPATH/src/github.com/chongyangshi/yronwood/
 COPY . .
-RUN go get -d -v
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-w -s" -o /go/bin/yronwood
+RUN GO111MODULE=off go get -d -v
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GO111MODULE=off go build -ldflags="-w -s" -o /go/bin/yronwood
 
 FROM scratch
 COPY --from=builder /go/bin/yronwood /go/bin/yronwood
