@@ -128,6 +128,7 @@ func internalMetadataToResponseList(images []imageMetadata) []types.ImageMetadat
 			FileName:   image.FileName,
 			AccessPath: image.AccessPath,
 			Uploaded:   image.Uploaded.Format(time.RFC3339),
+			ImageToken: image.ImageToken,
 		})
 	}
 

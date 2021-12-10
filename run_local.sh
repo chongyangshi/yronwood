@@ -6,6 +6,11 @@ AwEHoUQDQgAEUGPrCkuMJVI32dsZz4e3gTYisAvcnd97cepQGuynsmUhW4AIQN0J
 KUdlxCzAQZX2vlsQIzv9QdbX1gd4laatRA==
 -----END PRIVATE KEY-----"
 
+mkdir -p /tmp/yronwood_public
+mkdir -p /tmp/yronwood_unlisted
+mkdir -p /tmp/yronwood_private
+mkdir -p /tmp/yronwood_thumbnail
+
 export YRONWOOD_LISTEN_ADDR="127.0.0.1:18080"
 export YRONWOOD_INDEX_REDIRECT="https://google.co.uk"
 export YRONWOOD_STORAGE_DIRECTORY_PUBLIC="/tmp/yronwood_public"

@@ -46,9 +46,9 @@ function list_images(access_type, page) {
                         $("#images-container").append(current_row);
                         row_size = 0;
                     }
-                    var image_link = API_BASE + "/uploads/" + encodeURIComponent(image.access_path) + "/" + encodeURIComponent(image.file_name) + '?'
+                    var image_link = API_BASE + "/uploads/" + encodeURIComponent(image.access_path) + "/" + encodeURIComponent(image.file_name)
 
-                    if (image.image_token != null || image.image_token !== "") {
+                    if (image.image_token != null && image.image_token !== "") {
                         image_link = insertParam(image_link, "token", encodeURIComponent(image.image_token))
                     }
 
@@ -266,6 +266,10 @@ function insertParam(url, key, value) {
 
     if (i < 0) {
         kvp[kvp.length] = [key, value].join('=');
+    }
+
+    if (!kvp[0].endsWith("?")) {
+        kvp[0] = kvp[0] + "?"
     }
 
     return kvp.join('&');
