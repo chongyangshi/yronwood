@@ -28,35 +28,39 @@ import (
 )
 
 const (
-	maxUserTokenValidity  = time.Hour * 12
+	maxAdminTokenValidity = time.Hour * 12
 	maxImageTokenValidity = time.Hour * 48
+	randomPayloadSize     = 2048
 )
 
-var (
-	signingKey        *ecdsa.PrivateKey
-	randomPayloadSize = 2048
-)
+var cachedSigningKey *ecdsa.PrivateKey
 
 type ECDSASignature struct {
 	R, S *big.Int
 }
 
-func init() {
+func getSigningKey() (*ecdsa.PrivateKey, error) {
+	if cachedSigningKey != nil {
+		// Cached read not protected by lock, as race condition will not cause regression
+		return cachedSigningKey, nil
+	}
+
 	block, _ := pem.Decode([]byte(config.ConfigAuthenticationSigningKey))
 	if block == nil {
-		panic(fmt.Errorf("Could not decode ECDSA signing key from %s", config.ConfigAuthenticationSigningKey))
+		return nil, fmt.Errorf("Could not decode ECDSA signing key from %s", config.ConfigAuthenticationSigningKey)
 	}
-	x509Encoded := block.Bytes
 
-	var err error
-	signingKey, err = x509.ParseECPrivateKey(x509Encoded)
+	x509Encoded := block.Bytes
+	signingKey, err := x509.ParseECPrivateKey(x509Encoded)
 	if err != nil {
-		panic(fmt.Errorf("Error reading ECDSA signing key: %v", err))
+		return nil, fmt.Errorf("Error reading ECDSA signing key: %v", err)
 	}
+
+	return signingKey, nil
 }
 
 func SignAdminToken(validity time.Duration) (string, error) {
-	if validity <= 0 || validity > maxUserTokenValidity {
+	if validity <= 0 || validity > maxAdminTokenValidity {
 		return "", terrors.BadRequest(
 			"invalid_duration",
 			fmt.Sprintf("User token validity %d requested is invalid", validity),
@@ -107,6 +111,11 @@ func signToken(validity time.Duration, subject string) (string, error) {
 		return "", terrors.Wrap(err, nil)
 	}
 
+	signingKey, err := getSigningKey()
+	if err != nil {
+		return "", terrors.Wrap(err, nil)
+	}
+
 	signature, err := signingKey.Sign(rand.Reader, tokenHash.Sum(nil), nil)
 	if err != nil {
 		return "", terrors.Wrap(err, nil)
@@ -121,7 +130,7 @@ func VerifyAdminToken(encodedToken string) (bool, error) {
 }
 
 func VerifyImageToken(encodedToken, imagePath string) (bool, error) {
-	return verifyToken(encodedToken, imagePath)
+	return verifyToken(encodedToken, fmt.Sprintf("image/%s", imagePath))
 }
 
 func verifyToken(encodedToken, subject string) (bool, error) {
@@ -154,13 +163,17 @@ func verifyToken(encodedToken, subject string) (bool, error) {
 	}
 
 	saltedExpiry := fmt.Sprintf("%s_%s", components[0], components[1])
-	signaturePayload := []byte(fmt.Sprintf("%s:%s", subject, saltedExpiry))
+	signaturePayload := fmt.Sprintf("%s:%s", subject, saltedExpiry)
 	tokenHash := sha256.New()
 	_, err = tokenHash.Write([]byte(signaturePayload))
 	if err != nil {
 		return false, terrors.InternalService("", fmt.Sprintf("Error rehashing token: %v", err), nil)
 	}
 
+	signingKey, err := getSigningKey()
+	if err != nil {
+		return false, terrors.Wrap(err, nil)
+	}
 	validSignature := ecdsa.Verify(&signingKey.PublicKey, tokenHash.Sum(nil), ecdsaSignature.R, ecdsaSignature.S)
 	return validSignature, nil
 }
