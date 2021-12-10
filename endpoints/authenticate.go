@@ -12,7 +12,7 @@ import (
 	"github.com/chongyangshi/yronwood/types"
 )
 
-const authTokenValidity = time.Duration(time.Hour * 12)
+const authTokenValidity = time.Duration(time.Hour * 2)
 
 func authenticate(req typhon.Request) typhon.Response {
 	authenticateRequest, err := req.BodyBytes(true)
@@ -41,7 +41,7 @@ func authenticate(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.Forbidden("bad_secret", "Incorrect secret, cannot authenticate", nil)}
 	}
 
-	token, err := auth.SignToken(authTokenValidity)
+	token, err := auth.SignAdminToken(authTokenValidity)
 	if err != nil {
 		slog.Error(req, "Error signing auth token: %v", err)
 		return typhon.Response{Error: terrors.InternalService("", "Error processing authenticating request", nil)}

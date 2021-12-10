@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"sort"
@@ -20,12 +21,17 @@ const (
 	defaultPagingStart = 0
 	defaultPagingCount = 21
 	pageLimit          = 105
+
+	imageTokenValidity = time.Duration(time.Hour * 12)
 )
 
 type imageMetadata struct {
 	FileName   string
 	AccessPath string
 	Uploaded   time.Time
+
+	// Pre-signed read access token for private images only
+	ImageToken string
 }
 
 func listImages(req typhon.Request) typhon.Response {
@@ -48,7 +54,7 @@ func listImages(req typhon.Request) typhon.Response {
 	}
 
 	if body.AccessType != config.ConfigAccessTypePublic {
-		authSuccess, err := auth.VerifyToken(body.Token)
+		authSuccess, err := auth.VerifyAdminToken(body.Token)
 		if err != nil {
 			slog.Error(req, "Error authenticating: %v", err)
 			return typhon.Response{Error: terrors.InternalService("", "Error encountered authenticating you", nil)}
@@ -71,11 +77,27 @@ func listImages(req typhon.Request) typhon.Response {
 		}
 
 		for _, pathFile := range pathFiles {
-			files = append(files, imageMetadata{
+			imageMeta := imageMetadata{
 				FileName:   pathFile.Name(),
 				AccessPath: accessType,
 				Uploaded:   pathFile.ModTime(),
-			})
+			}
+
+			if accessType == config.ConfigAccessTypePrivate {
+				imageToken, err := auth.SignImageToken(
+					imageTokenValidity,
+					fmt.Sprintf("%s/%s", config.ConfigAccessTypePrivate, pathFile.Name()),
+				)
+
+				if err != nil {
+					slog.Error(req, "Error pre-signing image %s in directory %s: %v", pathFile.Name(), storagePath, err)
+					return typhon.Response{Error: terrors.InternalService("", "Error encountered listing images", nil)}
+				}
+
+				imageMeta.ImageToken = imageToken
+			}
+
+			files = append(files, imageMeta)
 		}
 	}
 

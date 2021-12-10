@@ -31,7 +31,10 @@ func viewImage(req typhon.Request) typhon.Response {
 
 	if accessType == config.ConfigAccessTypePrivate {
 		// Auth optional for public images and unlisted images.
-		authenticated, err := auth.VerifyToken(req.FormValue("token"))
+		authenticated, err := auth.VerifyImageToken(
+			req.FormValue("token"),
+			fmt.Sprintf("%s/%s", config.ConfigAccessTypePrivate, fileName),
+		)
 		if err != nil {
 			slog.Error(req, "Error authenticating client: %v", err)
 			return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}

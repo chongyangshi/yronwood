@@ -27,6 +27,11 @@ import (
 	"github.com/chongyangshi/yronwood/config"
 )
 
+const (
+	maxUserTokenValidity  = time.Hour * 12
+	maxImageTokenValidity = time.Hour * 48
+)
+
 var (
 	signingKey        *ecdsa.PrivateKey
 	randomPayloadSize = 2048
@@ -50,7 +55,35 @@ func init() {
 	}
 }
 
-func SignToken(validity time.Duration) (string, error) {
+func SignAdminToken(validity time.Duration) (string, error) {
+	if validity <= 0 || validity > maxUserTokenValidity {
+		return "", terrors.BadRequest(
+			"invalid_duration",
+			fmt.Sprintf("User token validity %d requested is invalid", validity),
+			nil,
+		)
+	}
+
+	return signToken(validity, "user/admin")
+}
+
+func SignImageToken(validity time.Duration, imagePath string) (string, error) {
+	if validity <= 0 || validity > maxImageTokenValidity {
+		return "", terrors.BadRequest(
+			"invalid_duration",
+			fmt.Sprintf("Image token validity %d requested is invalid", validity),
+			nil,
+		)
+	}
+
+	if imagePath == "" {
+		return "", terrors.BadRequest("invalid_image_path", "Image path for token cannot be empty", nil)
+	}
+
+	return signToken(validity, fmt.Sprintf("image/%s", imagePath))
+}
+
+func signToken(validity time.Duration, subject string) (string, error) {
 	randomPayload := make([]byte, randomPayloadSize)
 	_, err := rand.Read(randomPayload)
 	if err != nil {
@@ -66,9 +99,10 @@ func SignToken(validity time.Duration) (string, error) {
 
 	expiry := fmt.Sprintf("%d", time.Now().Add(validity).Unix())
 	saltedExpiry := fmt.Sprintf("%s_%s", expiry, payloadHash256)
+	signaturePayload := fmt.Sprintf("%s:%s", subject, saltedExpiry)
 
 	tokenHash := sha256.New()
-	_, err = tokenHash.Write([]byte(saltedExpiry))
+	_, err = tokenHash.Write([]byte(signaturePayload))
 	if err != nil {
 		return "", terrors.Wrap(err, nil)
 	}
@@ -82,7 +116,15 @@ func SignToken(validity time.Duration) (string, error) {
 	return token, nil
 }
 
-func VerifyToken(encodedToken string) (bool, error) {
+func VerifyAdminToken(encodedToken string) (bool, error) {
+	return verifyToken(encodedToken, "user/admin")
+}
+
+func VerifyImageToken(encodedToken, imagePath string) (bool, error) {
+	return verifyToken(encodedToken, imagePath)
+}
+
+func verifyToken(encodedToken, subject string) (bool, error) {
 	token, err := url.QueryUnescape(encodedToken)
 	if err != nil {
 		return false, terrors.BadRequest("invalid_token", fmt.Sprintf("Encoded authentication token is malformed: %v", err), nil)
@@ -111,9 +153,10 @@ func VerifyToken(encodedToken string) (bool, error) {
 		return false, terrors.BadRequest("invalid_token", fmt.Sprintf("Authentication token has unparsable signature: %v", err), nil)
 	}
 
-	saltedExpiry := []byte(fmt.Sprintf("%s_%s", components[0], components[1]))
+	saltedExpiry := fmt.Sprintf("%s_%s", components[0], components[1])
+	signaturePayload := []byte(fmt.Sprintf("%s:%s", subject, saltedExpiry))
 	tokenHash := sha256.New()
-	_, err = tokenHash.Write([]byte(saltedExpiry))
+	_, err = tokenHash.Write([]byte(signaturePayload))
 	if err != nil {
 		return false, terrors.InternalService("", fmt.Sprintf("Error rehashing token: %v", err), nil)
 	}

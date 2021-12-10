@@ -12,6 +12,7 @@ type ImageMetadata struct {
 	FileName   string `json:"file_name"`
 	AccessPath string `json:"access_path"`
 	Uploaded   string `json:"uploaded"`
+	ImageToken string `json:"image_token"` // Pre-signed read access token for private images only
 }
 
 type ImageUploadRequest struct {

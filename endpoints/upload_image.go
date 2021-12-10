@@ -43,7 +43,7 @@ func uploadImage(req typhon.Request) typhon.Response {
 	}
 
 	// Auth required for uploading images.
-	authenticated, err := auth.VerifyToken(body.Token)
+	authenticated, err := auth.VerifyAdminToken(body.Token)
 	if err != nil {
 		slog.Error(req, "Error authenticating client: %v", err)
 		return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
