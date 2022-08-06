@@ -12,7 +12,7 @@ import (
 )
 
 func handleIndex(req typhon.Request) typhon.Response {
-	response := fmt.Sprintf("Click <a href='%s'>here</a> if you are not being redirectd automatically.</a>")
+	response := fmt.Sprintf("Click <a href='%s'>here</a> if you are not being redirectd automatically.</a>", config.ConfigIndexRedirect)
 
 	rsp := typhon.NewResponse(req)
 	rsp.Header.Set("Location", config.ConfigIndexRedirect)

@@ -101,10 +101,9 @@ func listImages(req typhon.Request) typhon.Response {
 		}
 	}
 
+	// Sort a copy
 	var images = []imageMetadata{}
-	for _, file := range files {
-		images = append(images, file)
-	}
+	images = append(images, files...)
 
 	// Most recent first. This application deals with small number of files, so backend
 	// always lists all files of the access directory presently.
