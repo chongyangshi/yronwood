@@ -7,8 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/chongyangshi/yronwood/config"
 	"github.com/monzo/typhon"
+
+	"github.com/chongyangshi/yronwood/config"
 )
 
 func Service() typhon.Service {
@@ -18,6 +19,7 @@ func Service() typhon.Service {
 	router.POST("/authenticate", authenticate)
 	router.PUT("/upload", uploadImage)
 	router.GET("/uploads/:accesstype/:filename", viewImage)
+	router.POST("/delete", deleteImage)
 	router.POST("/list", listImages)
 	router.GET("/robots.txt", handleRobots)
 

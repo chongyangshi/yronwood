@@ -33,3 +33,9 @@ type ImageListRequest struct {
 type ImageListResponse struct {
 	Images []ImageMetadata `json:"images"`
 }
+
+type ImageDeleteRequest struct {
+	Token      string `json:"token"`
+	FileName   string `json:"file_name"`
+	AccessType string `json:"access_type"`
+}

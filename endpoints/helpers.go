@@ -137,3 +137,21 @@ func readFile(ctx context.Context, storagePath, fileName string) []byte {
 
 	return file
 }
+
+// deleteFile queries directory for existence of file, and if exists, delete
+// the file.
+func deleteFile(ctx context.Context, storagePath, fileName string) error {
+	filePath := path.Join(storagePath, fileName)
+	if _, err := os.Stat(filePath); err != nil {
+		slog.Error(ctx, "Could not find file %s to delete: %v", filePath, err)
+		return err
+	}
+
+	err := os.Remove(filePath)
+	if err != nil {
+		slog.Error(ctx, "Could not delete file %s: %v", filePath, err)
+		return err
+	}
+
+	return nil
+}
