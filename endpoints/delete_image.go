@@ -29,7 +29,7 @@ func deleteImage(req typhon.Request) typhon.Response {
 	}
 
 	// Must be authenticated as admin user to delete images
-	authenticated, err := auth.VerifyAdminToken(req.FormValue("token"))
+	authenticated, err := auth.VerifyAdminToken(body.Token)
 	if err != nil {
 		slog.Error(req, "Error authenticating client: %v", err)
 		return typhon.Response{Error: terrors.InternalService("", "Error encountered handling request", nil)}
