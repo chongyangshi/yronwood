@@ -1,7 +1,7 @@
 .PHONY: build
 SVC := yronwood
 WEB_ALPINE_VERSION := 3.15
-WEB_SVC := web-images-scy-email
+WEB_SVC := web-images-chongya-ng
 COMMIT := $(shell git log -1 --pretty='%h')
 
 .PHONY: pull build push

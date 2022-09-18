@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-images-scy-email
+  name: web-images-chongya-ng
   labels:
-    app: web-images-scy-email
+    app: web-images-chongya-ng
 spec:
   selector:
     matchLabels:
-      app: web-images-scy-email
+      app: web-images-chongya-ng
   replicas: 1
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: web-images-scy-email
+        app: web-images-chongya-ng
     spec:
       containers:
         - name: yronwood
-          image: icydoge/web:web-images-scy-email-fd865fb
+          image: icydoge/web:web-images-chongya-ng-fd865fb
           ports:
           - containerPort: 8080
           resources:
@@ -32,11 +32,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-images-scy-email
+  name: web-images-chongya-ng
 spec:
   ports:
   - port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
-    app: web-images-scy-email
+    app: web-images-chongya-ng

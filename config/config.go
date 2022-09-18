@@ -7,7 +7,7 @@ import (
 
 var (
 	ConfigListenAddr                = getConfigFromOSEnv("YRONWOOD_LISTEN_ADDR", ":8080")
-	ConfigIndexRedirect             = getConfigFromOSEnv("YRONWOOD_INDEX_REDIRECT", "https://images.scy.email")
+	ConfigIndexRedirect             = getConfigFromOSEnv("YRONWOOD_INDEX_REDIRECT", "https://images.chongya.ng")
 	ConfigStorageDirectoryPublic    = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PUBLIC", "/images/uploads/public")
 	ConfigStorageDirectoryUnlisted  = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_UNLISTED", "/images/uploads/big")
 	ConfigStorageDirectoryPrivate   = getConfigFromOSEnv("YRONWOOD_STORAGE_DIRECTORY_PRIVATE", "/images/uploads/private")
@@ -20,7 +20,7 @@ var (
 	ConfigAuthenticationSigningKey  = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_SIGHNING_KEY", "unit_test")
 	ConfigAuthenticationBasicSecret = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SECRET", "unit_test")
 	ConfigAuthenticationBasicSalt   = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SALT", "unit_test")
-	ConfigCORSAllowedOrigin         = getConfigFromOSEnv("YRONWOOD_CORS_ALLOWED_ORIGIN", "https://images.scy.email")
+	ConfigCORSAllowedOrigin         = getConfigFromOSEnv("YRONWOOD_CORS_ALLOWED_ORIGIN", "https://images.chongya.ng")
 )
 
 // This is intended to run inside Kubernetes as a pod, so we just set service Configurations from deployment Configuration.
