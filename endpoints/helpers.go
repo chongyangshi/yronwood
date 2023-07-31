@@ -19,7 +19,7 @@ import (
 	"github.com/chongyangshi/yronwood/config"
 )
 
-const tagSeparator = "$$"
+const tagSeparator = "|"
 
 var (
 	permittedExtensions        = strings.Split(config.ConfigPermittedExtensions, "|")
@@ -154,10 +154,6 @@ func decodeFileNameWithTags(fileNameWithTags string) (string, []string, error) {
 	return fileName, tags, nil
 }
 
-func fileNameHasTags(fileName string) bool {
-	return strings.Contains(fileName, tagSeparator)
-}
-
 func validateAccessType(accessType string) (bool, string) {
 	switch accessType {
 	case config.ConfigAccessTypePublic:
@@ -226,9 +222,9 @@ func deleteFile(ctx context.Context, storagePath, fileName string) error {
 		return err
 	}
 
-	pathFiles, err := ioutil.ReadDir(filePath)
+	pathFiles, err := ioutil.ReadDir(storagePath)
 	if err != nil {
-		slog.Error(ctx, "Could not list directory for file %s: %v", filePath, err)
+		slog.Error(ctx, "Could not list directory for file %s: %v", storagePath, err)
 		return err
 	}
 
@@ -237,7 +233,7 @@ func deleteFile(ctx context.Context, storagePath, fileName string) error {
 			continue
 		}
 
-		suffixFilePath := path.Join(storagePath, fileName, file.Name())
+		suffixFilePath := path.Join(storagePath, file.Name())
 		lstat, err := os.Lstat(suffixFilePath)
 		if err != nil {
 			slog.Error(ctx, "Could not check suffix file %s: %v", suffixFilePath, err)
