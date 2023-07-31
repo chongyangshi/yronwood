@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"os"
 	"sort"
 	"time"
@@ -18,10 +19,7 @@ import (
 )
 
 const (
-	defaultPagingStart = 0
-	defaultPagingCount = 21
-	pageLimit          = 105
-
+	pagingCount        = 21
 	imageTokenValidity = time.Duration(time.Hour * 12)
 )
 
@@ -160,11 +158,6 @@ func listImages(req typhon.Request) typhon.Response {
 		return images[i].Uploaded.After(images[j].Uploaded)
 	})
 
-	page := body.Page
-	if page > pageLimit {
-		// Hard stack limit on runtimes not optimising tail recursions.
-		page = pageLimit
-	}
 	start, end := boundPaging(body.Page, len(images))
 	return req.Response(types.ImageListResponse{Images: internalMetadataToResponseList(images[start:end])})
 }
@@ -184,22 +177,23 @@ func internalMetadataToResponseList(images []imageMetadata) []types.ImageMetadat
 	return files
 }
 
-func boundPaging(page, available int) (int, int) {
-	if page <= 0 {
-		return defaultPagingStart, boundMin(defaultPagingCount, available)
+func boundPaging(pageNumber, imagesAvailable int) (int, int) {
+	pageNumberMax := math.Ceil(float64(imagesAvailable) / pagingCount)
+
+	if pageNumber > int(pageNumberMax) {
+		pageNumber = int(pageNumberMax)
 	}
 
-	if page*defaultPagingCount <= available {
-		return (page - 1) * defaultPagingCount, page * defaultPagingCount
+	if pageNumber < 1 {
+		pageNumber = 1
 	}
 
-	// Tail recursive, sadly golang likely still doesn't optimise for it.
-	return boundPaging(page-1, available)
-}
+	imageNumberStart := (pageNumber - 1) * pagingCount
+	imageNumberEnd := pageNumber * pagingCount
 
-func boundMin(a, b int) int {
-	if a <= b {
-		return a
+	if imageNumberEnd > imagesAvailable {
+		imageNumberEnd = imagesAvailable
 	}
-	return b
+
+	return imageNumberStart, imageNumberEnd
 }
