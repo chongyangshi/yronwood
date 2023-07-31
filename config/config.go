@@ -16,7 +16,7 @@ var (
 	ConfigAccessTypeUnlisted        = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_UNLISTED", "big")
 	ConfigAccessTypePrivate         = getConfigFromOSEnv("YRONWOOD_ACCESS_TYPE_PRIVATE", "private")
 	ConfigMaxFileSize               = getConfigFromOSEnv("YRONWOOD_MAX_FILE_SIZE", "25165824")  // 24MB
-	ConfigMaxFileNameSize           = getConfigFromOSEnv("YRONWOOD_MAX_FILE_NAME_SIZE", "1024") // 24MB
+	ConfigMaxFileNameSize           = getConfigFromOSEnv("YRONWOOD_MAX_FILE_NAME_SIZE", "1024") // GCP max
 	ConfigPermittedExtensions       = getConfigFromOSEnv("YRONWOOD_PERMITTED_EXTENSIONS", "jpeg|jpg|png|gif")
 	ConfigAuthenticationSigningKey  = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_SIGHNING_KEY", "unit_test")
 	ConfigAuthenticationBasicSecret = getConfigFromOSEnv("YRONWOOD_AUTHENTICATION_BASIC_SECRET", "unit_test")
