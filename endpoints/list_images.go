@@ -27,6 +27,7 @@ const (
 
 type imageMetadata struct {
 	FileName   string
+	Tags       []string
 	AccessPath string
 	Uploaded   time.Time
 
@@ -67,8 +68,15 @@ func listImages(req typhon.Request) typhon.Response {
 		}
 	}
 
+	// Prepare tags for filtering images within the current accessible paths,
+	// if present.
+	filterTags := map[string]bool{}
+	for _, tag := range body.Tags {
+		filterTags[tag] = true
+	}
+
 	storagePaths := accessTypeToPaths(body.AccessType)
-	files := []imageMetadata{}
+	files := map[string]imageMetadata{}
 	for accessType, storagePath := range storagePaths {
 		pathFiles, err := ioutil.ReadDir(storagePath)
 		if err != nil && !os.IsNotExist(err) {
@@ -77,8 +85,38 @@ func listImages(req typhon.Request) typhon.Response {
 		}
 
 		for _, pathFile := range pathFiles {
+			fileName := pathFile.Name()
+
+			// If any tags are present on the image, separate them out. This has no effect
+			// for images without tags.
+			var tags []string
+			fileName, tags, err = decodeFileNameWithTags(fileName)
+			if err != nil {
+				slog.Error(req, "Error decoding tags for %s in directory %s: %v", fileName, storagePath, err)
+				return typhon.Response{Error: terrors.InternalService("", "Error encountered listing images", nil)}
+			}
+
+			// If any tag filters are present, only images which match at least
+			// one tag in the filter will be returned.
+			if len(filterTags) != 0 {
+				if len(tags) == 0 {
+					continue
+				}
+
+				matched := false
+				for _, tag := range tags {
+					if _, found := filterTags[tag]; found {
+						matched = true
+					}
+				}
+				if !matched {
+					continue
+				}
+			}
+
 			imageMeta := imageMetadata{
-				FileName:   pathFile.Name(),
+				FileName:   fileName,
+				Tags:       tags,
 				AccessPath: accessType,
 				Uploaded:   pathFile.ModTime(),
 			}
@@ -97,13 +135,24 @@ func listImages(req typhon.Request) typhon.Response {
 				imageMeta.ImageToken = imageToken
 			}
 
-			files = append(files, imageMeta)
+			// Images with tags will be processed multiple times due to presence of
+			// symlinks for tagged file names. Overwrite correctly to include tag
+			// information where applicable.
+			if existing, exists := files[fileName]; exists {
+				if len(existing.Tags) != 0 && len(imageMeta.Tags) == 0 {
+					continue
+				}
+			}
+
+			files[fileName] = imageMeta
 		}
 	}
 
 	// Sort a copy
 	var images = []imageMetadata{}
-	images = append(images, files...)
+	for _, file := range files {
+		images = append(images, file)
+	}
 
 	// Most recent first. This application deals with small number of files, so backend
 	// always lists all files of the access directory presently.
@@ -125,6 +174,7 @@ func internalMetadataToResponseList(images []imageMetadata) []types.ImageMetadat
 	for _, image := range images {
 		files = append(files, types.ImageMetadata{
 			FileName:   image.FileName,
+			Tags:       image.Tags,
 			AccessPath: image.AccessPath,
 			Uploaded:   image.Uploaded.Format(time.RFC3339),
 			ImageToken: image.ImageToken,

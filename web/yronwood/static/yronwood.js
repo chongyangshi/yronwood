@@ -19,6 +19,12 @@ $(document).ready(function () {
 });
 
 function list_images(access_type, page) {
+    const tags = getTagsFromCurrentURL();
+    if (tags.length !== 0) {
+        $("#yronwood-tags-info-text").text("Showing only images tagged with: ".concat(tags.join(", ")).concat("."));
+        $("#yronwood-tags-info").show();
+    }
+
     $.ajax({
         url: API_BASE + "/list",
         type: "POST",
@@ -26,6 +32,7 @@ function list_images(access_type, page) {
             "access_type": access_type,
             "page": page,
             "token": get_basic_auth_token(),
+            "tags": getTagsFromCurrentURL(),
         }),
         success: function (result) {
             $("#images-container").empty();
@@ -137,7 +144,8 @@ function doUploadFile(payload, checksum, filename) {
             "payload": payload,
             "checksum": checksum,
             "metadata": {
-                "file_name": randomFileName(32) + "." + fileNameComponents[1]
+                "file_name": randomFileName(32) + "." + fileNameComponents[1],
+                "tags": splitTags($("#fileTags").val()),
             }
         }),
         success: function (result) {
@@ -153,7 +161,8 @@ function doUploadFile(payload, checksum, filename) {
             }
         }
     });
-    // Clear the upload path value as it is a static modal.
+    // Clear the upload path value as it is a static modal. We don't clear the file tags
+    // as they are often reused between uploads.
     $("#uploadFile").val("");
 }
 
@@ -176,6 +185,10 @@ $(document).on("click", "#uploadButton", function (event) {
         });
     }
     reader.readAsArrayBuffer(file);
+});
+
+$(document).on("click", "#tagsReloadButton", function (event) {
+    window.location = window.location.pathname;
 });
 
 $(".previousPage").unbind().click(function (event) {
@@ -247,6 +260,27 @@ function randomFileName(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function splitTags(commaSeparatedTags) {
+    if (commaSeparatedTags === null || commaSeparatedTags.length === 0) {
+        return [];
+    }
+
+    tagsSplit = commaSeparatedTags.split(",");
+    tagsSplit.map(s => s.trim());
+    return tagsSplit;
+}
+
+function getTagsFromCurrentURL() {
+    const urlQueryString = window.location.search;
+    const urlQueryParams = new URLSearchParams(urlQueryString);
+    const tags = urlQueryParams.get("tags");
+    if (tags !== null && tags !== "") {
+        return splitTags(tags);
+    }
+
+    return [];
 }
 
 // Adapted from https://stackoverflow.com/a/487049

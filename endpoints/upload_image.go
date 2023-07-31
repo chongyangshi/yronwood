@@ -60,7 +60,14 @@ func uploadImage(req typhon.Request) typhon.Response {
 	}
 
 	if !validateFilename(body.Metadata.FileName) {
+		slog.Error(req, "Invalid file name: %+v", err)
 		return typhon.Response{Error: terrors.BadRequest("bad_file_name", "Invalid file name or extension specified", nil)}
+	}
+
+	taggedFileName, err := validateAndEncodeFileNameWithTags(body.Metadata.FileName, body.Metadata.Tags)
+	if err != nil {
+		slog.Error(req, "Invalid file name or tags: %+v", err)
+		return typhon.Response{Error: terrors.BadRequest("bad_file_tags", "Invalid file tags specified", nil)}
 	}
 
 	validAccessType, storagePath := validateAccessType(body.AccessType)
@@ -95,10 +102,23 @@ func uploadImage(req typhon.Request) typhon.Response {
 		return typhon.Response{Error: terrors.BadRequest("file_exists", "File with given name already exists", nil)}
 	}
 
+	// Upload the original file.
 	filePath := path.Join(storagePath, body.Metadata.FileName)
 	err = ioutil.WriteFile(filePath, decodedPayload, 0644)
 	if err != nil {
 		return typhon.Response{Error: terrors.InternalService("", fmt.Sprintf("Could not save file: %v", err), nil)}
+	}
+
+	// If tags present, create a symlink from the tagged file name to the original file.
+	// This symlink is used to store the tags in the file system only and would never be
+	// actually followed by Yronwood, only listed and filtered.
+	if taggedFileName == body.Metadata.FileName {
+		return req.Response(nil)
+	}
+
+	symlinkPath := path.Join(storagePath, taggedFileName)
+	if err := os.Symlink(filePath, symlinkPath); err != nil {
+		return typhon.Response{Error: terrors.InternalService("", fmt.Sprintf("Could not create symlink for tagged file: %v", err), nil)}
 	}
 
 	return req.Response(nil)

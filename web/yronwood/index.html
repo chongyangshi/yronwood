@@ -23,19 +23,24 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
       <a class="navbar-brand" href="#">Yronwood</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" data-target="#authenticateModal"><span class="oi oi-lock-locked index-icon clickable" aria-hidden="true" id="authenticateIcon"></span></a>
+            <a class="nav-link" data-toggle="modal" data-target="#authenticateModal"><span
+                class="oi oi-lock-locked index-icon clickable" aria-hidden="true" id="authenticateIcon"></span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://github.com/chongyangshi/yronwood"><span class="oi oi-code index-icon" aria-hidden="true"></span></a>
+            <a class="nav-link" href="https://github.com/chongyangshi/yronwood"><span class="oi oi-code index-icon"
+                aria-hidden="true"></span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="modal" data-target="#uploadModal"><span class="oi oi-data-transfer-upload index-icon clickable" aria-hidden="true" id="uploadIcon" hidden></span></a>
+            <a class="nav-link" data-toggle="modal" data-target="#uploadModal"><span
+                class="oi oi-data-transfer-upload index-icon clickable" aria-hidden="true" id="uploadIcon"
+                hidden></span></a>
           </li>
         </ul>
       </div>
@@ -44,6 +49,12 @@
 
   <div class="alert alert-success" role="alert" id="yronwood-success"></div>
   <div class="alert alert-danger" role="alert" id="yronwood-error"></div>
+  <div class="alert alert-info" role="alert" id="yronwood-tags-info">
+    <p id="yronwood-tags-info-text"></p>
+    <a href="#" id="tagsReloadButton">
+      View All Images
+    </a>
+  </div>
 
   <!-- Page Content -->
   <div class="images-container" id="images-container"></div>
@@ -52,10 +63,14 @@
   <div class="pagination-container">
     <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center"">
-        <li class="page-item"><a class="page-link firstPage" href="#"><<<<</a></li>
-        <li class="page-item"><a class="page-link previousPage" href="#"><<</a></li>
-        <li class="page-item"><a class="page-link currentPage" href="#">1</a></li>
-        <li class="page-item"><a class="page-link nextPage" href="#">>></a></li>
+        <li class=" page-item"><a class="page-link firstPage" href="#">
+          <<<< </a>
+            </li>
+            <li class="page-item"><a class="page-link previousPage" href="#">
+                << </a>
+            </li>
+            <li class="page-item"><a class="page-link currentPage" href="#">1</a></li>
+            <li class="page-item"><a class="page-link nextPage" href="#">>></a></li>
       </ul>
     </nav>
   </div>
@@ -64,8 +79,9 @@
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="static/yronwood.js"></script>
-  
-  <div class="modal fade" id="authenticateModal" tabindex="-1" role="dialog" aria-labelledby="authenticateModalTitle" aria-hidden="true">
+
+  <div class="modal fade" id="authenticateModal" tabindex="-1" role="dialog" aria-labelledby="authenticateModalTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -79,17 +95,20 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroup-sizing-default">Secret</span>
             </div>
-            <input type="password" id="authenticateSecret" class="form-control" aria-label="Secret" aria-describedby="inputGroup-sizing-default">
-          </div>          
+            <input type="password" id="authenticateSecret" class="form-control" aria-label="Secret"
+              aria-describedby="inputGroup-sizing-default">
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" data-dismiss="modal" id="authenticateButton">Authenticate</button>
+          <button type="submit" class="btn btn-primary" data-dismiss="modal"
+            id="authenticateButton">Authenticate</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalTitle" aria-hidden="true">
+  <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalTitle"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -104,8 +123,8 @@
             <div class="custom-file">
               <input type="file" class="custom-file-input" id="uploadFile">
               <label class="custom-file-label" for="uploadFile">Choose file</label>
-            </div> 
-          </div>   
+            </div>
+          </div>
           <label for="accessTypeSelection">Access Type</label>
           <div class="input-group mb-3">
             <select class="form-control" id="accessTypeSelection">
@@ -113,6 +132,11 @@
               <option value="big">Unlisted</option>
               <option value="private">Private</option>
             </select>
+          </div>
+          <label for="fileTags">Comma-Separated Tags</label>
+          <div class="input-group mb-3">
+            <input type="text" id="fileTags" class="form-control" aria-label="Tags"
+              aria-describedby="inputGroup-sizing-default">
           </div>
         </div>
         <div class="modal-footer">

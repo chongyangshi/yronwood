@@ -9,10 +9,11 @@ type AuthenticateResponse struct {
 }
 
 type ImageMetadata struct {
-	FileName   string `json:"file_name"`
-	AccessPath string `json:"access_path"`
-	Uploaded   string `json:"uploaded"`
-	ImageToken string `json:"image_token"` // Pre-signed read access token for private images only
+	FileName   string   `json:"file_name"`
+	Tags       []string `json:"tags"`
+	AccessPath string   `json:"access_path"`
+	Uploaded   string   `json:"uploaded"`
+	ImageToken string   `json:"image_token"` // Pre-signed read access token for private images only
 }
 
 type ImageUploadRequest struct {
@@ -25,9 +26,10 @@ type ImageUploadRequest struct {
 
 // Auth optional for public images only.
 type ImageListRequest struct {
-	Token      string `json:"token"`
-	AccessType string `json:"access_type"`
-	Page       int    `json:"page"`
+	Token      string   `json:"token"`
+	AccessType string   `json:"access_type"`
+	Page       int      `json:"page"`
+	Tags       []string `json:"tags"`
 }
 
 type ImageListResponse struct {

@@ -1,18 +1,36 @@
-#yronwood-error:empty{
+#yronwood-error {
+    text-align: center;
+}
+
+#yronwood-error:empty {
     display: none;
 }
 
-#yronwood-success:empty{
+#yronwood-success {
+    text-align: center;
+}
+
+#yronwood-success:empty {
     display: none;
+}
+
+#yronwood-tags-info {
+    display: none;
+    text-align: center;
 }
 
 #images-container {
-    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAO0lEQVQoU2NkIAIwElJz6NCh/3gVgRTY2dkxEjQJZBNWRTATYE7BUISuAKdJ6J6Bm4TNBBTr8CkAKQQA6oYXT+kQKfMAAAAASUVORK5CYII=) repeat;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAO0lEQVQoU2NkIAIwElJz6NCh/3gVgRTY2dkxEjQJZBNWRTATYE7BUISuAKdJ6J6Bm4TNBBTr8CkAKQQA6oYXT+kQKfMAAAAASUVORK5CYII=) repeat;
+}
+
+#yronwood-tags-info-text {
+    display: inline
 }
 
 div.pagination-container {
-    background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgGwSgwVAFbmAgXQdISfAAAAAElFTkSuQmCC) repeat;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgGwSgwVAFbmAgXQdISfAAAAAElFTkSuQmCC) repeat;
 }
+
 span.index-icon {
     color: silver;
     padding-right: 20px;
