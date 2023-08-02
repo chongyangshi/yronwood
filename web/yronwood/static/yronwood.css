@@ -47,7 +47,7 @@ div.grid-image {
 }
 
 img.grid-image {
-    max-width: 30vw;
+    max-width: 80vw;
     min-width: 30vw;
     border-color: silver;
     border-style: dotted;
