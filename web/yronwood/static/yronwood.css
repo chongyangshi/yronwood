@@ -46,12 +46,24 @@ div.grid-image {
     margin-bottom: 2.5vh;
 }
 
-img.grid-image {
-    max-width: 80vw;
-    min-width: 30vw;
-    border-color: silver;
-    border-style: dotted;
-    border-width: 1px;
+@media only screen and (min-width: 800px) {
+    img.grid-image {
+        max-width: 30vw;
+        min-width: 30vw;
+        border-color: silver;
+        border-style: dotted;
+        border-width: 1px;
+    }
+}
+
+@media only screen and (max-width: 799px) {
+    img.grid-image {
+        max-width: 80vw;
+        min-width: 30vw;
+        border-color: silver;
+        border-style: dotted;
+        border-width: 1px;
+    }
 }
 
 .clickable {
