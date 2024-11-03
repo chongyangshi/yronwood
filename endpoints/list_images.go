@@ -159,7 +159,10 @@ func listImages(req typhon.Request) typhon.Response {
 	})
 
 	start, end := boundPaging(body.Page, len(images))
-	return req.Response(types.ImageListResponse{Images: internalMetadataToResponseList(images[start:end])})
+	return req.Response(types.ImageListResponse{
+		Images:         internalMetadataToResponseList(images[start:end]),
+		PagesAvailable: end < len(images),
+	})
 }
 
 func internalMetadataToResponseList(images []imageMetadata) []types.ImageMetadata {

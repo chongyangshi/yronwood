@@ -33,7 +33,8 @@ type ImageListRequest struct {
 }
 
 type ImageListResponse struct {
-	Images []ImageMetadata `json:"images"`
+	Images         []ImageMetadata `json:"images"`
+	PagesAvailable bool            `json:"next_page"`
 }
 
 type ImageDeleteRequest struct {
