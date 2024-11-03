@@ -27,6 +27,12 @@
     display: inline
 }
 
+button.disabled-paging-button {
+    pointer-events: none;
+    cursor: default;
+    opacity: 75%;
+}
+
 div.pagination-container {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgGwSgwVAFbmAgXQdISfAAAAAElFTkSuQmCC) repeat;
 }

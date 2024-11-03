@@ -65,6 +65,28 @@ function list_images(access_type, page) {
                     row_size++;
                 }
             }
+
+            // Disable backwards paging buttons if on first page
+            if (page === 1) {
+                $(".firstPage").addClass("disabled-paging-button");
+                $(".firstPage").prop("disabled", true);
+                $(".previousPage").addClass("disabled-paging-button");
+                $(".previousPage").prop("disabled", true);
+            } else {
+                $(".firstPage").removeClass("disabled-paging-button");
+                $(".firstPage").prop("disabled", false);
+                $(".previousPage").removeClass("disabled-paging-button");
+                $(".previousPage").prop("disabled", false);
+            }
+
+            // Disable forwards paging buttons unless the API states there are additional pages
+            if (result.next_page === true) {
+                $(".nextPage").removeClass("disabled-paging-button");
+                $(".nextPage").prop("disabled", false);
+            } else {
+                $(".nextPage").addClass("disabled-paging-button");
+                $(".nextPage").prop("disabled", true);
+            }
         },
         error: function (result) {
             if (result.responseText == undefined || result.responseText == "") {
