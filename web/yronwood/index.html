@@ -31,16 +31,17 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" data-toggle="modal" data-target="#authenticateModal"><span
-                class="oi oi-lock-locked index-icon clickable" aria-hidden="true" id="authenticateIcon"></span></a>
+                class="oi oi-lock-locked index-icon clickable" aria-hidden="true" id="authenticateIcon"
+                title="Login"></span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://github.com/chongyangshi/yronwood"><span class="oi oi-code index-icon"
-                aria-hidden="true"></span></a>
+                aria-hidden="true" title="Source Code"></span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="modal" data-target="#uploadModal"><span
                 class="oi oi-data-transfer-upload index-icon clickable" aria-hidden="true" id="uploadIcon"
-                hidden></span></a>
+                title="Upload" hidden></span></a>
           </li>
         </ul>
       </div>
@@ -57,7 +58,7 @@
   </div>
 
   <!-- Page Content -->
-  <div class="images-container" id="images-container"></div>
+  <div class="images-container container-with-background" id="images-container"></div>
 
   <!-- Pagination Navigation -->
   <div class="pagination-container">
@@ -74,6 +75,12 @@
       </ul>
     </nav>
   </div>
+
+  <!-- Content License Statement -->
+  <div class="license-container container-with-background">
+    <p class="license-text"></p>
+  </div>
+
 
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>

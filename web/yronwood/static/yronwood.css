@@ -19,10 +19,6 @@
     text-align: center;
 }
 
-#images-container {
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAO0lEQVQoU2NkIAIwElJz6NCh/3gVgRTY2dkxEjQJZBNWRTATYE7BUISuAKdJ6J6Bm4TNBBTr8CkAKQQA6oYXT+kQKfMAAAAASUVORK5CYII=) repeat;
-}
-
 #yronwood-tags-info-text {
     display: inline
 }
@@ -33,8 +29,28 @@ button.disabled-paging-button {
     opacity: 75%;
 }
 
+div.container-with-background {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAO0lEQVQoU2NkIAIwElJz6NCh/3gVgRTY2dkxEjQJZBNWRTATYE7BUISuAKdJ6J6Bm4TNBBTr8CkAKQQA6oYXT+kQKfMAAAAASUVORK5CYII=) repeat;
+}
+
 div.pagination-container {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2NkYGD4z8DAwMgABXAGNgGwSgwVAFbmAgXQdISfAAAAAElFTkSuQmCC) repeat;
+    margin: 0;
+    padding: 0;
+}
+
+ul.pagination {
+    margin: 0;
+    padding: 0;
+}
+
+div.license-container {
+    text-align: center;
+}
+
+p.license-text {
+    margin: 0;
+    padding: 0;
 }
 
 span.index-icon {

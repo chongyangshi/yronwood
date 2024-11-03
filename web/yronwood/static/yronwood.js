@@ -1,11 +1,16 @@
 const ACCESS_TYPE_PUBLIC = "public"
 const ACCESS_TYPE_PRIVATE = "private"
 
+// Change to the base address of your Yronwood backend server, whose CORS policy must
+// allow the origin of the web frontend if using different hostnames.
 var API_BASE = "https://i.doge.at"
 if (window.location.hostname == undefined || window.location.hostname == "") {
     // For local running, served by browser from file.
     API_BASE = "http://127.0.0.1:18080";
 }
+
+// Change text to reflect license choice for public images.
+var LICENSE_TEXT = "Unless otherwise stated, all public contents of this gallery are original works © Chongyang Shi, and are licensed for re-use under the terms of CC BY 4.0.";
 
 var current_accss_type = ACCESS_TYPE_PUBLIC
 var current_page = 1
@@ -16,6 +21,8 @@ $(document).ready(function () {
         set_authenticated();
     }
     list_images(current_accss_type, current_page);
+
+    $(".license-text").text(LICENSE_TEXT);
 });
 
 function list_images(access_type, page) {
