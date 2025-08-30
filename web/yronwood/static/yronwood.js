@@ -179,7 +179,6 @@ function doUploadFile(payload, checksum, filename, sequence, total) {
         }),
         success: function (result) {
             $("#yronwood-success").text(`Image ${sequence} out of ${total} uploaded successfully.`);
-            resetPaging();
         },
         error: function (result) {
             if (result.responseText == undefined || result.responseText == "") {
@@ -217,7 +216,8 @@ $(document).on("click", "#uploadButton", function (event) {
             });
         }
         reader.readAsArrayBuffer(file);
-    })
+    });
+    resetPaging();
 });
 
 $(document).on("click", "#tagsReloadButton", function (event) {
