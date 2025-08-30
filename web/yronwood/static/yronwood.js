@@ -157,7 +157,7 @@ $(document).on("change", "#uploadFile", function () {
     $(this).next('.custom-file-label').html(fileName);
 })
 
-function doUploadFile(payload, checksum, filename) {
+function doUploadFile(payload, checksum, filename, sequence, total) {
     var fileNameComponents = filename.split(".")
     if (fileNameComponents == undefined || fileNameComponents.length < 2) {
         $("#yronwood-error").text("File must have an extension in name");
@@ -178,7 +178,7 @@ function doUploadFile(payload, checksum, filename) {
             }
         }),
         success: function (result) {
-            $("#yronwood-success").text("Upload successful");
+            $("#yronwood-success").text(`Image ${sequence} out of ${total} uploaded successfully.`);
             resetPaging();
         },
         error: function (result) {
@@ -198,22 +198,26 @@ function doUploadFile(payload, checksum, filename) {
 $(document).on("click", "#uploadButton", function (event) {
     $("#yronwood-success").text("");
     $("#yronwood-error").text("");
-    var file = $("#uploadFile").prop('files')[0];
-    if (file == undefined || file.length == 0) {
-        $("#yronwood-error").text("You must select a file");
+    var files = $("#uploadFile").prop('files');
+    if (files == undefined || files.length == 0) {
+        $("#yronwood-error").text("You must select at least one file");
+        $('#uploadModal').modal('hide');
         return
     }
 
-    var reader = new FileReader();
-    reader.filename = file.name
-    reader.onload = function (file) {
-        var arrayBuffer = this.result
-        var base64Payload = btoa([].reduce.call(new Uint8Array(arrayBuffer), function (p, c) { return p + String.fromCharCode(c) }, ''))
-        digestMessage(base64Payload).then(function (digestValue) {
-            doUploadFile(base64Payload, hexString(digestValue), file.target.filename);
-        });
-    }
-    reader.readAsArrayBuffer(file);
+    var total_files = files.length;
+    Object.keys(files).forEach(i => {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            var arrayBuffer = reader.result
+            var base64Payload = btoa([].reduce.call(new Uint8Array(arrayBuffer), function (p, c) { return p + String.fromCharCode(c) }, ''))
+            digestMessage(base64Payload).then(function (digestValue) {
+                doUploadFile(base64Payload, hexString(digestValue), file.name, parseInt(i) + 1, total_files);
+            });
+        }
+        reader.readAsArrayBuffer(file);
+    })
 });
 
 $(document).on("click", "#tagsReloadButton", function (event) {
